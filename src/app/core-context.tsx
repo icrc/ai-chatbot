@@ -30,6 +30,7 @@ import {
   type UserLanguageOption,
 } from "./api/models";
 import { getUserSettings, postUser } from "./api/route";
+import FullPageStatus from "@ai-chatbot/components/full-page-status/full-page-status";
 
 export interface ThemeTypeOptions {
   key: ThemeOptions;
@@ -259,46 +260,16 @@ const CoreProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     };
   }, [chatModes, knowledgeBases, languageModels, user, userError]);
 
-  if (!user && !userError && !chatModesError) {
-    // FIXME
-    return <h1>{t("general.loading")}</h1>;
+    if (!user && !userError && !chatModesError) {
+    return <FullPageStatus isLoading />;
   }
 
   if (userError) {
-    // FIXME
-    return (
-      <>
-        <h1>{t("fullPageStatus.serviceTemporarilyUnavailable")}</h1>
-        <p>{t("fullPageStatus.technicalIssues")}</p>
-        <p>{t("fullPageStatus.assistance")}</p>
-      </>
-    );
+    return <FullPageStatus variant="noCoreData" />;
   }
 
   if (chatModesError) {
-    // FIXME
-    const SMTCatalogItemLink =
-      "https://smt.ext.icrc.org/esc?id=sc_cat_item&sys_id=e4a1f648cd8c6a90078ad7cac21c584d";
-
-    return (
-      <>
-        <h1>{t("fullPageStatus.noAvailableChatModes")}</h1>
-        <p>{t("fullPageStatus.noAccessChatModes")}</p>
-        <p>
-          {t("fullPageStatus.requestAccess1")}{" "}
-          <a
-            href={`${SMTCatalogItemLink}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline"
-          >
-            {t("fullPageStatus.SMTCatalogItemLink")}
-          </a>{" "}
-          {t("fullPageStatus.requestAccess2")}
-        </p>
-        <p>{t("fullPageStatus.existingAccess")}</p>
-      </>
-    );
+    return <FullPageStatus variant="noModes" />;
   }
 
   return (
@@ -326,54 +297,7 @@ const CoreProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         setUserSettings,
       }}
     >
-      {!user?.tou?.valid && (
-        <AlertDialog
-          open={alertOpen}
-          onOpenChange={() => {
-            console.info("onOpenChange", { user });
-          }}
-        >
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>
-                {t("alertDialog.termsOfUseTitle")}
-              </AlertDialogTitle>
-              <AlertDialogDescription>
-                Welcome to FIND, ICRC's AI-powered chatbot! This tool is for
-                professional purposes for your job at the ICRC. You acknowledge
-                that you have read and understood the AI policy (1-pager), the
-                Information Handling Topology (2-pager) and the Acceptable Use
-                of Information Systems (1-pager). AI chatbots come at a
-                financial cost and have an environmental footprint, please
-                refrain from using for personal use and use it responsibly. Your
-                interactions are recorded and processed on ICRC data center for
-                the purposes of auditability, financial control, application
-                improvements. Your or your department/unit accesses may be
-                limited or throttled in case of excessive or non-compliant use.
-                Data is sent and processed in ICRC public cloud tenant. It is
-                therefore prohibited to input strictly confidential information
-                in this tool (e.g., sensitive personal data). Chatbots are known
-                to hallucinate, always verify the text accuracy. You will remain
-                the human responsible of what you do with the chatbot outputs.
-                Should you have further questions or comments, please feel free
-                to reach out by joining the AI community. By using this service,
-                you acknowledge to the above, including how we collect and use
-                your data. Enjoy chatting!
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogAction
-                onClick={() => {
-                  console.info("onClick", { user });
-                  setAlertOpen(false);
-                }}
-              >
-                {t("alertDialog.acceptButton")}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      )}
+      {!user?.tou?.valid && <FullPageStatus variant="termsOfUse" />}
       {children}
     </CoreContext.Provider>
   );
