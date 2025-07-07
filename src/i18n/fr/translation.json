@@ -1,0 +1,73 @@
+{
+    "general": {
+        "loading": "Chargement...",
+        "unableToSignIn": "Impossible de se connecter : {{error}}",
+        "greeting": "Bonjour !",
+        "greetingHelp": "Comment puis-je vous aider aujourd'hui ?"
+    },
+    "chatLog": {
+        "thinkingPrompt": "Hmm..."
+    },
+    "topBar": {},
+    "sideBar": {
+        "newChat": "Nouvelle conversation",
+        "noConversations": "Vos conversations apparaîtront ici dès que vous commencerez à discuter !",
+        "revisitPreviousChats": "Connectez-vous pour sauvegarder et revoir vos conversations précédentes !",
+        "conversations": {
+            "today": "Aujourd'hui",
+            "yesterday": "Hier",
+            "lastSevenDays": "7 derniers jours",
+            "lastThirtyDays": "30 derniers jours",
+            "olderThanLastMonth": "Plus ancien que le mois dernier",
+            "reachedTheEndOfChatHistory": "Vous avez atteint la fin de votre historique de conversation.",
+            "loadingChats": "Chargement des conversations..."
+        },
+        "sideMenu": {
+            "loadingAuthStatus": "Chargement du statut d'authentification",
+            "settings": "Paramètres",
+            "documentation": "Documentation",
+            "toggleDarkMode": "Basculer en mode sombre",
+            "toggleLightMode": "Basculer en mode clair"
+        }
+    },
+    "alertDialog": {
+        "termsOfUseTitle": "Conditions d'utilisation",
+        "acceptButton": "Accepter"
+    },
+    "userSettingsDialog": {
+        "language": "Langue",
+        "selectLanguage": "Sélectionnez votre langue par défaut pour l'interface de l'application.",
+        "theme": "Thème",
+        "selectTheme": "Sélectionnez votre thème d'interface préféré.",
+        "defaultChatMode": "Mode de conversation par défaut",
+        "defaultChatModeDescription": "Définissez le mode de conversation par défaut au démarrage.",
+        "knowledgeBase": "Base de connaissances par défaut",
+        "selectKnowledgeBase": "Sélectionnez votre base de connaissances préférée pour Chat avec des documents.",
+        "defaultGPTModel": "Modèle GPT par défaut",
+        "differentGPTModels": "Les différents modèles peuvent varier en termes de capacités, de style de réponse et de vitesse.",
+        "restoreHiddenChats": "Rétablir les conversations cachées",
+        "restoreDescription": "Rétablir les conversations précédentes qui ont été cachées de vos sujets récents.",
+        "restore": "Rétablir",
+        "Dark": "Sombre",
+        "Light": "Clair",
+        "saveSuccess": "Paramètres enregistrés avec succès.",
+        "saveError": "Erreur lors de l'enregistrement des modifications. Veuillez essayer à nouveau.",
+        "savingChanges": "Enregistrement des modifications...",
+        "saveChanges": "Enregistrer les modifications"
+    },
+    "fullPageStatus": {
+        "noAvailableChatModes": "Aucun mode de conversation disponible",
+        "noAccessChatModes": "Il semble que vous n'ayez pas accès à aucun mode de conversation.",
+        "requestAccess1": "La plateforme est actuellement en phase pilote avec les communautés IM et ICT. Nous travaillons dur pour ouvrir le service dès que possible en 2025. Si vous souhaitez exprimer votre intérêt pour un accès anticipé, veuillez vous inscrire",
+        "SMTCatalogItemLink": "ici.",
+        "requestAccess2": "Nous vous contacterons lorsque nous serons prêts à ouvrir l'accès.",
+        "existingAccess": "Si vous êtes un utilisateur avec un accès existant, essayez de recharger la page ou de vider votre cache et vos cookies pour résoudre le problème.",
+        "serviceTemporarilyUnavailable": "Service temporairement indisponible",
+        "technicalIssues": "Nous rencontrons des problèmes techniques pour charger les données essentielles. Veuillez essayer à nouveau dans quelques instants.",
+        "assistance": "Si le problème persiste, veuillez ouvrir un ticket de support via le portail de services de la CICR pour obtenir de l'aide."
+    },
+    "markdownRenderer": {
+        "copyCode": "Copier le code"
+    },
+    "promptInput": {}
+}
