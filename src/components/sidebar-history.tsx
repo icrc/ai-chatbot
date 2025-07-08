@@ -4,10 +4,9 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import useSWRInfinite from "swr/infinite";
 import { useTranslation } from "react-i18next";
 import { isToday, isYesterday, subMonths, subWeeks } from "date-fns";
-import { getChats } from "@ai-chatbot/app/api/route";
+import { getChats, hideChat } from "@ai-chatbot/app/api/route";
 import { ChatModeKeyOptions, type Chat } from "@ai-chatbot/app/api/models";
 import {
   SidebarGroup,
@@ -35,63 +34,6 @@ type GroupedChats = {
   older: Chat[];
 };
 
-export interface ChatHistory {
-  chats: Array<Chat>;
-  hasMore: boolean;
-}
-
-const PAGE_SIZE = 20;
-
-const groupChatsByDate = (chats: Chat[]): GroupedChats => {
-  const now = new Date();
-  const oneWeekAgo = subWeeks(now, 1);
-  const oneMonthAgo = subMonths(now, 1);
-
-  return chats?.reduce(
-    (groups, chat) => {
-      const chatDate = new Date(chat.created_at as string);
-
-      if (isToday(chatDate)) {
-        groups.today.push(chat);
-      } else if (isYesterday(chatDate)) {
-        groups.yesterday.push(chat);
-      } else if (chatDate > oneWeekAgo) {
-        groups.lastWeek.push(chat);
-      } else if (chatDate > oneMonthAgo) {
-        groups.lastMonth.push(chat);
-      } else {
-        groups.older.push(chat);
-      }
-
-      return groups;
-    },
-    {
-      today: [],
-      yesterday: [],
-      lastWeek: [],
-      lastMonth: [],
-      older: [],
-    } as GroupedChats
-  );
-};
-
-export function getChatHistoryPaginationKey(
-  pageIndex: number,
-  previousPageData: ChatHistory
-) {
-  if (previousPageData && previousPageData.hasMore === false) {
-    return null;
-  }
-
-  if (pageIndex === 0) return `/api/history?limit=${PAGE_SIZE}`;
-
-  const firstChatFromPage = previousPageData.chats.at(-1);
-
-  if (!firstChatFromPage) return null;
-
-  return `/api/history?ending_before=${firstChatFromPage.id}&limit=${PAGE_SIZE}`;
-}
-
 export function SidebarHistory({ user }: { user: string | undefined }) {
   const { setOpenMobile } = useSidebar();
   const { t } = useTranslation();
@@ -106,37 +48,77 @@ export function SidebarHistory({ user }: { user: string | undefined }) {
   const hasEmptyChatHistory = chatHistory ? chatHistory.length === 0 : false;
 
   useEffect(() => {
-    getChats(ChatModeKeyOptions.Generic).then((data) =>
-      setChatHistory([...data])
-    );
+    // FIXME
+    getChats(ChatModeKeyOptions.Documents).then((data) => {
+      setChatHistory([...data]);
+    });
   }, []);
 
+  const groupChatsByDate = (chats: Chat[]): GroupedChats => {
+    const now = new Date();
+    const oneWeekAgo = subWeeks(now, 1);
+    const oneMonthAgo = subMonths(now, 1);
+
+    return chats?.reduce(
+      (groups, chat) => {
+        if (isValidChat(chat)) {
+          const chatDate = new Date(chat.created_at as string);
+
+          if (isToday(chatDate)) {
+            groups.today.push(chat);
+          } else if (isYesterday(chatDate)) {
+            groups.yesterday.push(chat);
+          } else if (chatDate > oneWeekAgo) {
+            groups.lastWeek.push(chat);
+          } else if (chatDate > oneMonthAgo) {
+            groups.lastMonth.push(chat);
+          } else {
+            groups.older.push(chat);
+          }
+        }
+
+        return groups;
+      },
+      {
+        today: [],
+        yesterday: [],
+        lastWeek: [],
+        lastMonth: [],
+        older: [],
+      } as GroupedChats
+    );
+  };
+
+  const isValidChat = (chat: Chat) => {
+    return Boolean(
+      // FIXME
+      // chat?.chat_mode_key === currentChatMode.key &&
+      chat?.title && chat?.id && !chat?.hidden
+    );
+  };
+
   const handleDelete = async () => {
-    const deletePromise = fetch(`/api/chat?id=${deleteId}`, {
-      method: "DELETE",
-    });
+    if (deleteId) {
+      toast.promise(hideChat(deleteId), {
+        loading: t("toast.hidingChat"),
+        success: () => {
+          setChatHistory((prevChats) =>
+            prevChats.map((c) =>
+              c.id === deleteId ? { ...c, hidden: true } : c
+            )
+          );
 
-    // toast.promise(deletePromise, {
-    //   loading: 'Deleting chat...',
-    //   success: () => {
-    //     mutate((chatHistories) => {
-    //       if (chatHistories) {
-    //         return chatHistories.map((chatHistory) => ({
-    //           ...chatHistory,
-    //           chats: chatHistory.chats.filter((chat) => chat.id !== deleteId),
-    //         }));
-    //       }
-    //     });
+          return t("toast.chatHiddenSuccessfully");
+        },
+        error: t("toast.failedToHideChat"),
+        finally: () => {
+          setShowDeleteDialog(false);
 
-    //     return 'Chat deleted successfully';
-    //   },
-    //   error: 'Failed to delete chat',
-    // });
-
-    setShowDeleteDialog(false);
-
-    if (deleteId === id) {
-      router.push("/");
+          if (deleteId === id) {
+            router.push("/");
+          }
+        },
+      });
     }
   };
 
@@ -336,14 +318,14 @@ export function SidebarHistory({ user }: { user: string | undefined }) {
               {t("alertDialog.deleteChatWarningTitle")}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              {t("alertDialog.deleteChatWarningTitle")}
+              {t("alertDialog.deleteChatWarningDescription")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>
+            <AlertDialogCancel className="cursor-pointer">
               {t("alertDialog.deleteChatWarningCancelButton")}
             </AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>
+            <AlertDialogAction onClick={handleDelete} className="cursor-pointer">
               {t("alertDialog.deleteChatWarningContinueButton")}
             </AlertDialogAction>
           </AlertDialogFooter>

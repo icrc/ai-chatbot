@@ -1,28 +1,19 @@
-import { memo } from 'react';
-import Link from 'next/link';
-import {
-  CheckCircleFillIcon,
-  EyeIcon,
-  GlobeIcon,
-  MoreHorizontalIcon,
-  ShareIcon,
-  TrashIcon,
-} from './icons';
+import { memo } from "react";
+import { useTranslation } from "react-i18next";
+import Link from "next/link";
+import type { Chat } from "@ai-chatbot/app/api/models";
+import { HideIcon, MoreIcon } from "./icons";
 import {
   SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
-} from './ui/sidebar';
+} from "./ui/sidebar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuPortal,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from './ui/dropdown-menu';
+} from "./ui/dropdown-menu";
 
 const PureChatItem = ({
   chat,
@@ -30,11 +21,12 @@ const PureChatItem = ({
   onDelete,
   setOpenMobile,
 }: {
-  chat: any;
+  chat: Chat;
   isActive: boolean;
   onDelete: (chatId: string) => void;
   setOpenMobile: (open: boolean) => void;
 }) => {
+  const { t } = useTranslation();
   return (
     <SidebarMenuItem>
       <SidebarMenuButton asChild isActive={isActive}>
@@ -46,58 +38,61 @@ const PureChatItem = ({
       <DropdownMenu modal={true}>
         <DropdownMenuTrigger asChild>
           <SidebarMenuAction
-            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground mr-0.5"
+            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground mr-0.5 cursor-pointer"
             showOnHover={!isActive}
           >
-            <MoreHorizontalIcon />
-            <span className="sr-only">More</span>
+            <MoreIcon />
+            <span className="sr-only">{t("sideBar.conversations.more")}</span>
           </SidebarMenuAction>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent side="bottom" align="end">
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger className="cursor-pointer">
+          {/* <DropdownMenuSub>
+            <DropdownMenuSubTrigger
+              disabled
+              className="cursor-pointer disabled:cursor-wait disabled:text-red-500"
+            >
               <ShareIcon />
-              <span>Share</span>
+              <span>{t("sideBar.conversations.share")}</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
               <DropdownMenuSubContent>
                 <DropdownMenuItem
                   className="cursor-pointer flex-row justify-between"
                   onClick={() => {
-                    console.info('Private');
+                    console.info("Private");
                   }}
                 >
                   <div className="flex flex-row gap-2 items-center">
                     <EyeIcon size={12} />
-                    <span>Private</span>
+                    <span>{t("sideBar.conversations.private")}</span>
                   </div>
-                  {/* {visibilityType === 'private' ? (
+                  {visibilityType === 'private' ? (
                     <CheckCircleFillIcon />
-                  ) : null} */}
+                  ) : null}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className="cursor-pointer flex-row justify-between"
                   onClick={() => {
-                    console.info('Public');
+                    console.info("Public");
                   }}
                 >
                   <div className="flex flex-row gap-2 items-center">
                     <GlobeIcon />
-                    <span>Public</span>
+                    <span>{t("sideBar.conversations.public")}</span>
                   </div>
-                  {/* {visibilityType === 'public' ? <CheckCircleFillIcon /> : null} */}
+                  {visibilityType === 'public' ? <CheckCircleFillIcon /> : null}
                 </DropdownMenuItem>
               </DropdownMenuSubContent>
             </DropdownMenuPortal>
-          </DropdownMenuSub>
+          </DropdownMenuSub> */}
 
           <DropdownMenuItem
             className="cursor-pointer text-destructive focus:bg-destructive/15 focus:text-destructive dark:text-red-500"
             onSelect={() => onDelete(chat.id)}
           >
-            <TrashIcon />
-            <span>Delete</span>
+            <HideIcon />
+            <span>{t("sideBar.conversations.hide")}</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

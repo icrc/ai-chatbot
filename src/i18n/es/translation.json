@@ -3,10 +3,15 @@
         "loading": "Cargando...",
         "unableToSignIn": "No se puede iniciar sesión: {{error}}",
         "greeting": "¡Hola!",
-        "greetingHelp": "¿En qué puedo ayudarte hoy?"
+        "greetingHelp": "¿Cómo puedo ayudarte hoy?"
     },
     "chatLog": {
         "thinkingPrompt": "Hmm..."
+    },
+    "toast": {
+        "hidingChat": "Ocultando chat...",
+        "chatHiddenSuccessfully": "Chat ocultado con éxito",
+        "failedToHideChat": "No se pudo ocultar el chat: {{error}}"
     },
     "topBar": {},
     "sideBar": {
@@ -19,8 +24,14 @@
             "lastSevenDays": "Últimos 7 días",
             "lastThirtyDays": "Últimos 30 días",
             "olderThanLastMonth": "Más antiguo que el mes pasado",
-            "reachedTheEndOfChatHistory": "Has alcanzado el final de tu historial de conversación.",
-            "loadingChats": "Cargando conversaciones..."
+            "reachedTheEndOfChatHistory": "Has llegado al final de tu historial de conversación.",
+            "loadingChats": "Cargando conversaciones...",
+            "more": "Más",
+            "share": "Compartir",
+            "private": "Privado",
+            "public": "Público",
+            "delete": "Eliminar",
+            "hide": "Ocultar"
         },
         "sideMenu": {
             "loadingAuthStatus": "Cargando estado de autenticación",
@@ -31,20 +42,26 @@
         }
     },
     "alertDialog": {
-        "termsOfUseTitle": "Términos de uso",
-        "acceptButton": "Aceptar"
+        "termsOfUseTitle": "Términos de Uso",
+        "acceptButton": "Aceptar",
+        "deleteChatWarningTitle": "¿Estás absolutamente seguro?",
+        "deleteChatWarningDescription": "Esta acción no se puede deshacer. Esto ocultará permanentemente tu chat y lo eliminará de tu historial.",
+        "deleteChatWarningCancelButton": "Cancelar",
+        "deleteChatWarningContinueButton": "Continuar"
     },
     "userSettingsDialog": {
+        "settingsTitle": "Configuración",
+        "settingsDescription": "Cambiar configuración de usuario",
         "language": "Idioma",
         "selectLanguage": "Seleccione su idioma predeterminado para la interfaz de la aplicación.",
         "theme": "Tema",
         "selectTheme": "Seleccione su tema de interfaz preferido.",
-        "defaultChatMode": "Modo de conversación predeterminado",
+        "defaultChatMode": "Modo de conversación Predeterminado",
         "defaultChatModeDescription": "Establezca el modo de conversación predeterminado al inicio.",
-        "knowledgeBase": "Base de conocimientos predeterminada",
+        "knowledgeBase": "Base de Conocimientos Predeterminada",
         "selectKnowledgeBase": "Seleccione su base de conocimientos preferida para Chat con documentos.",
         "defaultGPTModel": "Modelo GPT predeterminado",
-        "differentGPTModels": "Los diferentes modelos pueden variar en términos de capacidades, estilo de respuesta y velocidad.",
+        "differentGPTModels": "Diferentes modelos pueden variar en términos de capacidades, estilo de respuesta y velocidad.",
         "restoreHiddenChats": "Restaurar conversaciones ocultas",
         "restoreDescription": "Restaurar conversaciones anteriores que fueron ocultadas de tus temas recientes.",
         "restore": "Restaurar",
@@ -56,15 +73,15 @@
         "saveChanges": "Guardar cambios"
     },
     "fullPageStatus": {
-        "noAvailableChatModes": "No hay modos de conversación disponibles",
+        "noAvailableChatModes": "No hay Modos de Conversación Disponibles",
         "noAccessChatModes": "Parece que no tienes acceso a ningún modo de conversación.",
-        "requestAccess1": "La plataforma se encuentra actualmente en fase piloto con las comunidades IM y ICT. Estamos trabajando duro para abrir el servicio lo antes posible en 2025. Si deseas expresar tu interés en un acceso anticipado, regístrate",
+        "requestAccess1": "La plataforma se encuentra actualmente en fase piloto con las comunidades IM y ICT. Estamos trabajando duro para abrir el servicio lo antes posible en 2025. Si deseas expresar tu interés en un acceso anticipado, por favor regístrate",
         "SMTCatalogItemLink": "aquí.",
         "requestAccess2": "Nos pondremos en contacto contigo cuando estemos listos para abrir el acceso.",
         "existingAccess": "Si eres un usuario con acceso existente, intenta recargar la página o borrar tu caché y cookies para resolver el problema.",
-        "serviceTemporarilyUnavailable": "Servicio temporalmente no disponible",
+        "serviceTemporarilyUnavailable": "Servicio Temporalmente No Disponible",
         "technicalIssues": "Estamos experimentando algunos problemas técnicos para cargar los datos esenciales. Por favor, inténtelo de nuevo en unos momentos.",
-        "assistance": "Si el problema persiste, abre un ticket de soporte a través del portal de servicios de la CICR para obtener asistencia."
+        "assistance": "Si el problema persiste, por favor abre un ticket de soporte a través del Portal de Servicios de la CICR para obtener asistencia."
     },
     "markdownRenderer": {
         "copyCode": "Copiar código"
