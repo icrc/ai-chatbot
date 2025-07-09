@@ -6,7 +6,14 @@
         "greetingHelp": "How can I help you today?"
     },
     "chatLog": {
-        "thinkingPrompt": "Hmm..."
+        "thinkingPrompt": "Hmm...",
+        "tryIt": "Try it!",
+        "reloadSuggestions": "Reload suggestions",
+        "lastUpdatedOn": "Last updated on",
+        "page": "Page",
+        "sourceDocuments": "Source Documents",
+        "viewIn": "View in",
+        "viewOriginalFile": "View original file"
     },
     "topBar": {},
     "sideBar": {
@@ -80,5 +87,10 @@
     "markdownRenderer": {
         "copyCode": "Copy code"
     },
-    "promptInput": {}
+    "promptInput": {
+        "dataSensitivity": "Data is sent and processed in ICRC public cloud tenant. Do not enter strictly confidential information (e.g., sensitive personal data). Verify generated text accuracy.",
+        "askMeSomething": "Ask me something!",
+        "submitButton": "Submit question",
+        "stopButton": "Stop streaming"
+    }
 }

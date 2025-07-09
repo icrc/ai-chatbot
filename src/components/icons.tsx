@@ -1,3 +1,5 @@
+import { CogIcon, ExternalLink, EyeOff } from "lucide-react";
+
 export const BotIcon = () => {
   return (
     <svg
@@ -1190,4 +1192,16 @@ export const MetaIcon = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
+};
+
+export const CogWheelIcon = ({ size = 16 }: { size?: number }) => {
+  return <CogIcon size={size} />;
+};
+
+export const HideIcon = ({ size = 16 }: { size?: number }) => {
+  return <EyeOff size={size} />;
+};
+
+export const ExternalLinkIcon  = ({ size = 16 }: { size?: number }) => {
+  return <ExternalLink size={size} />;
 };

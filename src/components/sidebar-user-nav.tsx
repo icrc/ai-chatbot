@@ -179,7 +179,7 @@ export function SidebarUserNav({ user }: { user: any }) {
               </GenericDialogDescription>
             </div>
             <Button
-              className="cursor-pointer bg-transparent text-white hover:bg-accent"
+              className="cursor-pointer bg-transparent dark:text-white text-black hover:bg-accent"
               onClick={closeModal}
             >
               <CrossIcon />

@@ -25,6 +25,7 @@ import { ArrowDown } from "lucide-react";
 import { SuggestedActions } from "./suggested-actions";
 import { useScrollToBottom } from "@ai-chatbot/hooks/use-scroll-to-bottom";
 import type { Message, Source } from "@ai-chatbot/app/api/models";
+import { useTranslation } from "react-i18next";
 
 function PureMultimodalInput({
   chatId,
@@ -53,11 +54,12 @@ function PureMultimodalInput({
   handleSubmit: UseChatHelpers["handleSubmit"];
   className?: string;
 }) {
+  const { width } = useWindowSize();
+  const { t } = useTranslation();
+
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [shouldLoadSuggestions, setShouldLoadSuggestions] =
     useState<boolean>(false);
-
-  const { width } = useWindowSize();
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -111,10 +113,9 @@ function PureMultimodalInput({
   const [uploadQueue, setUploadQueue] = useState<Array<string>>([]);
 
   useEffect(() => {
-    const cenas =
-      !chatId && !messages.length && !sources.length && !uploadQueue.length;
-    console.log({ cenas });
-    setShouldLoadSuggestions(cenas);
+    setShouldLoadSuggestions(
+      !chatId && !messages.length && !sources.length && !uploadQueue.length
+    );
   }, [messages, sources, uploadQueue]);
 
   const submitForm = useCallback(() => {
@@ -165,6 +166,7 @@ function PureMultimodalInput({
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error("Failed to upload file, please try again!");
+      console.error(error);
     }
   };
 
@@ -281,7 +283,7 @@ function PureMultimodalInput({
       <Textarea
         data-testid="multimodal-input"
         ref={textareaRef}
-        placeholder="Send a message..."
+        placeholder={t("promptInput.askMeSomething")}
         value={input}
         onChange={handleInput}
         className={cx(
