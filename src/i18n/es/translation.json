@@ -6,7 +6,19 @@
         "greetingHelp": "¿Cómo puedo ayudarte hoy?"
     },
     "chatLog": {
-        "thinkingPrompt": "Hmm..."
+        "thinkingPrompt": "Hmm...",
+        "tryIt": "¡Prueba!",
+        "reloadSuggestions": "Recargar sugerencias",
+        "lastUpdatedOn": "Última actualización el",
+        "page": "Página",
+        "sourceDocuments": "Documentos fuente",
+        "viewIn": "Ver en",
+        "viewOriginalFile": "Ver archivo original"
+    },
+    "toast": {
+        "hidingChat": "Ocultando chat...",
+        "chatHiddenSuccessfully": "Chat ocultado con éxito",
+        "failedToHideChat": "Error al ocultar chat: {{error}}"
     },
     "toast": {
         "hidingChat": "Ocultando chat...",
@@ -15,7 +27,7 @@
     },
     "topBar": {},
     "sideBar": {
-        "newChat": "Nueva conversación",
+        "newChat": "Nuevo chat",
         "noConversations": "Tus conversaciones aparecerán aquí una vez que comiences a chatear.",
         "revisitPreviousChats": "Inicia sesión para guardar y revisar conversaciones anteriores.",
         "conversations": {
@@ -24,8 +36,8 @@
             "lastSevenDays": "Últimos 7 días",
             "lastThirtyDays": "Últimos 30 días",
             "olderThanLastMonth": "Más antiguo que el mes pasado",
-            "reachedTheEndOfChatHistory": "Has llegado al final de tu historial de conversación.",
-            "loadingChats": "Cargando conversaciones...",
+            "reachedTheEndOfChatHistory": "Has alcanzado el final de tu historial de chat.",
+            "loadingChats": "Cargando chats...",
             "more": "Más",
             "share": "Compartir",
             "private": "Privado",
@@ -53,45 +65,50 @@
         "settingsTitle": "Configuración",
         "settingsDescription": "Cambiar configuración de usuario",
         "language": "Idioma",
-        "selectLanguage": "Seleccione su idioma predeterminado para la interfaz de la aplicación.",
+        "selectLanguage": "Selecciona el idioma predeterminado para la interfaz de la aplicación.",
         "theme": "Tema",
-        "selectTheme": "Seleccione su tema de interfaz preferido.",
-        "defaultChatMode": "Modo de conversación Predeterminado",
-        "defaultChatModeDescription": "Establezca el modo de conversación predeterminado al inicio.",
-        "knowledgeBase": "Base de Conocimientos Predeterminada",
-        "selectKnowledgeBase": "Seleccione su base de conocimientos preferida para Chat con documentos.",
+        "selectTheme": "Selecciona el tema de interfaz preferido.",
+        "defaultChatMode": "Modo de chat predeterminado",
+        "defaultChatModeDescription": "Establece el modo de chat predeterminado al inicio.",
+        "knowledgeBase": "Base de conocimiento predeterminada",
+        "selectKnowledgeBase": "Selecciona la base de conocimiento preferida para el chat con documentos.",
         "defaultGPTModel": "Modelo GPT predeterminado",
-        "differentGPTModels": "Diferentes modelos pueden variar en términos de capacidades, estilo de respuesta y velocidad.",
-        "restoreHiddenChats": "Restaurar conversaciones ocultas",
-        "restoreDescription": "Restaurar conversaciones anteriores que fueron ocultadas de tus temas recientes.",
+        "differentGPTModels": "Los diferentes modelos pueden variar en capacidades, estilo de respuesta y velocidad.",
+        "restoreHiddenChats": "Restaurar chats ocultos",
+        "restoreDescription": "Restaurar chats anteriores que fueron ocultados de tus temas recientes.",
         "restore": "Restaurar",
         "Dark": "Oscuro",
         "Light": "Claro",
         "saveSuccess": "Configuración guardada con éxito.",
-        "saveError": "Error al guardar los cambios. Por favor, inténtelo de nuevo.",
+        "saveError": "Error al guardar cambios. Por favor, inténtalo de nuevo.",
         "savingChanges": "Guardando cambios...",
         "saveChanges": "Guardar cambios"
     },
     "fullPageStatus": {
-        "noAvailableChatModes": "No hay Modos de Conversación Disponibles",
-        "noAccessChatModes": "Parece que no tienes acceso a ningún modo de conversación.",
-        "requestAccess1": "La plataforma se encuentra actualmente en fase piloto con las comunidades IM y ICT. Estamos trabajando duro para abrir el servicio lo antes posible en 2025. Si deseas expresar tu interés en un acceso anticipado, por favor regístrate",
+        "noAvailableChatModes": "No hay modos de chat disponibles",
+        "noAccessChatModes": "Parece que no tienes acceso a ningún modo de chat.",
+        "requestAccess1": "La plataforma está siendo pilotada actualmente por IM y las comunidades de ICT. Estamos trabajando duro para abrir el servicio lo antes posible en 2025. Si deseas expresar tu interés en un acceso temprano, por favor regístrate",
         "SMTCatalogItemLink": "aquí.",
         "requestAccess2": "Nos pondremos en contacto contigo cuando estemos listos para abrir el acceso.",
         "existingAccess": "Si eres un usuario con acceso existente, intenta recargar la página o borrar tu caché y cookies para resolver el problema.",
-        "serviceTemporarilyUnavailable": "Servicio Temporalmente No Disponible",
-        "technicalIssues": "Estamos experimentando algunos problemas técnicos para cargar los datos esenciales. Por favor, inténtelo de nuevo en unos momentos.",
-        "assistance": "Si el problema persiste, abre un ticket de soporte a través del portal de servicios de la CICR para obtener asistencia.",
-        "termsOfUse": "Condiciones de uso",
-        "processing": "Tratamiento...",
+        "serviceTemporarilyUnavailable": "Servicio temporalmente no disponible",
+        "technicalIssues": "Estamos experimentando problemas técnicos al cargar datos esenciales. Por favor, inténtalo de nuevo en unos momentos.",
+        "assistance": "Si el problema persiste, por favor abre un ticket de soporte a través del portal de servicios de la CICR para obtener asistencia.",
+        "termsOfUse": "Términos de uso",
+        "processing": "Procesando...",
         "accept": "Aceptar",
-        "errorProcessingRequest": "Error al procesar la solicitud. Por favor inténtalo de nuevo.",
-        "settings": "Ajustes",
-        "retry": "Rever",
-        "openTicket": "Abrir un ticket"
+        "errorProcessingRequest": "Error al procesar la solicitud. Por favor, inténtalo de nuevo.",
+        "settings": "Configuración",
+        "retry": "Reintentar",
+        "openTicket": "Abrir ticket"
     },
     "markdownRenderer": {
         "copyCode": "Copiar código"
     },
-    "promptInput": {}
+    "promptInput": {
+        "dataSensitivity": "Los datos se envían y procesan en la nube pública alquilada por el CICR. No ingrese información estrictamente confidencial (e.j. datos personales sensibles), y siempre verifique la precisión del texto generado por esta herramienta.",
+        "askMeSomething": "Pregúntame algo!",
+        "submitButton": "Enviar pregunta",
+        "stopButton": "Detener streaming"
+    }
 }

@@ -110,7 +110,6 @@ export function Chat({
             sourcesEntries = [...entries];
           }
         });
-        setAttachments(sourcesEntries);
         console.info({ chatData, sourcesEntries });
       });
     }

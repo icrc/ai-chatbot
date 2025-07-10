@@ -1,5 +1,5 @@
-import { SourceFileTypes, type Source } from '@ai-chatbot/app/api/models';
-import { LoaderIcon } from './icons';
+import { SourceFileTypes, type Source } from "@ai-chatbot/app/api/models";
+import { LoaderIcon } from "./icons";
 
 export const PreviewAttachment = ({
   attachment,
@@ -8,7 +8,7 @@ export const PreviewAttachment = ({
   attachment: Source;
   isUploading?: boolean;
 }) => {
-  const { file_name, file_type, file_uri } = attachment;
+  const { file_name, file_type, file_uri, text } = attachment;
 
   const mapFileTypes = () => {
     switch (file_type) {
@@ -16,8 +16,8 @@ export const PreviewAttachment = ({
         return (
           <img
             key={file_uri}
-            src={'../../docx-file-logo.svg'}
-            alt={file_name ?? 'An image attachment'}
+            src={"../../docx-file-logo.svg"}
+            alt={file_name ?? "An image attachment"}
             className="rounded-md size-full object-cover"
           />
         );
@@ -25,8 +25,8 @@ export const PreviewAttachment = ({
         return (
           <img
             key={file_uri}
-            src={'../../pdf-file-logo.svg'}
-            alt={file_name ?? 'An image attachment'}
+            src={"../../pdf-file-logo.svg"}
+            alt={file_name ?? "An image attachment"}
             className="rounded-md size-full object-cover"
           />
         );
@@ -34,27 +34,27 @@ export const PreviewAttachment = ({
         return (
           <img
             key={file_uri}
-            src={'../../txt-file-logo.svg'}
-            alt={file_name ?? 'An image attachment'}
+            src={"../../txt-file-logo.svg"}
+            alt={file_name ?? "An image attachment"}
             className="rounded-md size-full object-cover"
           />
         );
 
       default:
-        return file_type.startsWith('image') ? (
+        return file_type.startsWith("image") ? (
           // NOTE: it is recommended to use next/image for images
           // eslint-disable-next-line @next/next/no-img-element
           <img
             key={file_uri}
             src={file_uri}
-            alt={file_name ?? 'An image attachment'}
+            alt={file_name ?? "An image attachment"}
             className="rounded-md size-full object-cover"
           />
         ) : (
           <img
             key={file_uri}
-            src={'../../file.svg'}
-            alt={file_name ?? 'An image attachment'}
+            src={"../../file.svg"}
+            alt={file_name ?? "An image attachment"}
             className="rounded-md size-full object-cover"
           />
         );
@@ -62,7 +62,13 @@ export const PreviewAttachment = ({
   };
 
   return (
-    <div data-testid="input-attachment-preview" className="flex flex-col gap-2">
+    <a
+      data-testid="input-attachment-preview"
+      className="flex flex-col gap-2 cursor-pointer"
+      href={file_uri}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
       <div className="w-20 h-16 aspect-video bg-muted rounded-md relative flex flex-col items-center justify-center">
         {mapFileTypes()}
 
@@ -76,6 +82,7 @@ export const PreviewAttachment = ({
         )}
       </div>
       <div className="text-xs text-zinc-500 max-w-16 truncate">{file_name}</div>
-    </div>
+      <div className="text-xs text-zinc-500 max-w-16 truncate">{text}</div>
+    </a>
   );
 };

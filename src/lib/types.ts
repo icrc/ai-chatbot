@@ -48,3 +48,8 @@ export interface Session extends DefaultSession {
     type: UserType;
   } & DefaultSession['user'];
 }
+
+export enum FileMode {
+  View = "view",
+  Edit = "edit",
+} 

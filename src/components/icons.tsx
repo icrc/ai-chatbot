@@ -1,4 +1,4 @@
-import { CogIcon, EyeOff } from "lucide-react";
+import { CogIcon, ExternalLink, EyeOff } from "lucide-react";
 
 export const BotIcon = () => {
   return (
@@ -1200,4 +1200,8 @@ export const CogWheelIcon = ({ size = 16 }: { size?: number }) => {
 
 export const HideIcon = ({ size = 16 }: { size?: number }) => {
   return <EyeOff size={size} />;
+};
+
+export const ExternalLinkIcon  = ({ size = 16 }: { size?: number }) => {
+  return <ExternalLink size={size} />;
 };

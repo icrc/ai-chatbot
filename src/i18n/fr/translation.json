@@ -6,7 +6,19 @@
         "greetingHelp": "Comment puis-je vous aider aujourd'hui ?"
     },
     "chatLog": {
-        "thinkingPrompt": "Hmm..."
+        "thinkingPrompt": "Hmm...",
+        "tryIt": "Essayez-le !",
+        "reloadSuggestions": "Recharger les suggestions",
+        "lastUpdatedOn": "Dernière mise à jour le",
+        "page": "Page",
+        "sourceDocuments": "Documents sources",
+        "viewIn": "Voir dans",
+        "viewOriginalFile": "Voir le fichier original"
+    },
+    "toast": {
+        "hidingChat": "Masquer le chat...",
+        "chatHiddenSuccessfully": "Chat masqué avec succès",
+        "failedToHideChat": "Échec de la dissimulation du chat : {{error}}"
     },
     "toast": {
         "hidingChat": "Masquer le chat...",
@@ -15,7 +27,7 @@
     },
     "topBar": {},
     "sideBar": {
-        "newChat": "Nouvelle conversation",
+        "newChat": "Nouveau chat",
         "noConversations": "Vos conversations apparaîtront ici dès que vous commencerez à discuter !",
         "revisitPreviousChats": "Connectez-vous pour sauvegarder et revoir vos conversations précédentes !",
         "conversations": {
@@ -24,8 +36,8 @@
             "lastSevenDays": "7 derniers jours",
             "lastThirtyDays": "30 derniers jours",
             "olderThanLastMonth": "Plus ancien que le mois dernier",
-            "reachedTheEndOfChatHistory": "Vous avez atteint la fin de votre historique de conversation.",
-            "loadingChats": "Chargement des conversations...",
+            "reachedTheEndOfChatHistory": "Vous avez atteint la fin de votre historique de chat.",
+            "loadingChats": "Chargement des chats...",
             "more": "Plus",
             "share": "Partager",
             "private": "Privé",
@@ -34,7 +46,7 @@
             "hide": "Masquer"
         },
         "sideMenu": {
-            "loadingAuthStatus": "Chargement du statut d'authentification",
+            "loadingAuthStatus": "Chargement de l'état d'authentification",
             "settings": "Paramètres",
             "documentation": "Documentation",
             "toggleDarkMode": "Basculer en mode sombre",
@@ -44,7 +56,7 @@
     "alertDialog": {
         "termsOfUseTitle": "Conditions d'utilisation",
         "acceptButton": "Accepter",
-        "deleteChatWarningTitle": "Êtes-vous absolument sûr ?",
+        "deleteChatWarningTitle": "Êtes-vous absolument certain ?",
         "deleteChatWarningDescription": "Cette action ne peut pas être annulée. Cela masquera définitivement votre chat et le supprimera de votre historique.",
         "deleteChatWarningCancelButton": "Annuler",
         "deleteChatWarningContinueButton": "Continuer"
@@ -53,37 +65,37 @@
         "settingsTitle": "Paramètres",
         "settingsDescription": "Modifier les paramètres de l'utilisateur",
         "language": "Langue",
-        "selectLanguage": "Sélectionnez votre langue par défaut pour l'interface de l'application.",
+        "selectLanguage": "Sélectionnez la langue par défaut pour l'interface de l'application.",
         "theme": "Thème",
-        "selectTheme": "Sélectionnez votre thème d'interface préféré.",
-        "defaultChatMode": "Mode de conversation par défaut",
-        "defaultChatModeDescription": "Définissez le mode de conversation par défaut au démarrage.",
+        "selectTheme": "Sélectionnez le thème d'interface préféré.",
+        "defaultChatMode": "Mode de chat par défaut",
+        "defaultChatModeDescription": "Définissez le mode de chat par défaut au démarrage.",
         "knowledgeBase": "Base de connaissances par défaut",
-        "selectKnowledgeBase": "Sélectionnez votre base de connaissances préférée pour Chat avec des documents.",
+        "selectKnowledgeBase": "Sélectionnez la base de connaissances préférée pour le chat avec des documents.",
         "defaultGPTModel": "Modèle GPT par défaut",
         "differentGPTModels": "Les différents modèles peuvent varier en termes de capacités, de style de réponse et de vitesse.",
-        "restoreHiddenChats": "Rétablir les conversations cachées",
-        "restoreDescription": "Rétablir les conversations précédentes qui ont été cachées de vos sujets récents.",
+        "restoreHiddenChats": "Rétablir les chats masqués",
+        "restoreDescription": "Rétablir les chats précédents qui ont été masqués de vos sujets récents.",
         "restore": "Rétablir",
         "Dark": "Sombre",
         "Light": "Clair",
         "saveSuccess": "Paramètres enregistrés avec succès.",
-        "saveError": "Erreur lors de l'enregistrement des modifications. Veuillez essayer à nouveau.",
+        "saveError": "Erreur lors de l'enregistrement des modifications. Veuillez réessayer.",
         "savingChanges": "Enregistrement des modifications...",
         "saveChanges": "Enregistrer les modifications"
     },
     "fullPageStatus": {
-        "noAvailableChatModes": "Aucun mode de conversation disponible",
-        "noAccessChatModes": "Il semble que vous n'ayez pas accès à aucun mode de conversation.",
-        "requestAccess1": "La plateforme est actuellement en phase pilote avec les communautés IM et ICT. Nous travaillons dur pour ouvrir le service dès que possible en 2025. Si vous souhaitez exprimer votre intérêt pour un accès anticipé, veuillez vous inscrire",
+        "noAvailableChatModes": "Aucun mode de chat disponible",
+        "noAccessChatModes": "Il semble que vous n'ayez pas accès à aucun mode de chat.",
+        "requestAccess1": "La plateforme est actuellement en phase pilote par IM et les communautés ICT. Nous travaillons dur pour ouvrir le service dès que possible en 2025. Si vous souhaitez exprimer votre intérêt pour un accès anticipé, veuillez vous inscrire",
         "SMTCatalogItemLink": "ici.",
         "requestAccess2": "Nous vous contacterons lorsque nous serons prêts à ouvrir l'accès.",
         "existingAccess": "Si vous êtes un utilisateur avec un accès existant, essayez de recharger la page ou de vider votre cache et vos cookies pour résoudre le problème.",
         "serviceTemporarilyUnavailable": "Service temporairement indisponible",
-        "technicalIssues": "Nous rencontrons des problèmes techniques pour charger les données essentielles. Veuillez essayer à nouveau dans quelques instants.",
+        "technicalIssues": "Nous rencontrons des problèmes techniques lors du chargement des données essentielles. Veuillez réessayer dans quelques instants.",
         "assistance": "Si le problème persiste, veuillez ouvrir un ticket de support via le portail de services de la CICR pour obtenir de l'aide.",
         "termsOfUse": "Conditions d'utilisation",
-        "processing": "Traitement...",
+        "processing": "Traitement en cours...",
         "accept": "Accepter",
         "errorProcessingRequest": "Erreur lors du traitement de la demande. Veuillez réessayer.",
         "settings": "Paramètres",
@@ -93,5 +105,10 @@
     "markdownRenderer": {
         "copyCode": "Copier le code"
     },
-    "promptInput": {}
+    "promptInput": {
+        "dataSensitivity": "Les données sont envoyées et traitées dans le cloud public du CICR. Ne saisissez pas d’informations strictement confidentielles (par ex. des informations personelles sensibles). Vérifiez l’exactitude du texte généré.",
+        "askMeSomething": "Demandez-moi quelque chose!",
+        "submitButton": "Soumettre la question",
+        "stopButton": "Arrêter la génération"
+    }
 }
