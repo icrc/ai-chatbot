@@ -3,12 +3,10 @@
 import { useEffect, useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import useSWR, { useSWRConfig } from "swr";
-import { unstable_serialize } from "swr/infinite";
 import { useSearchParams } from "next/navigation";
 import { ChatHeader } from "@ai-chatbot/components/chat-header";
 import { fetchWithErrorHandlers, generateUUID } from "@ai-chatbot/lib/utils";
 import { useArtifactSelector } from "@ai-chatbot/hooks/use-artifact";
-import { useAutoResume } from "@ai-chatbot/hooks/use-auto-resume";
 import { ChatSDKError } from "@ai-chatbot/lib/errors";
 import type { Vote } from "@ai-chatbot/lib/types";
 import {
@@ -21,7 +19,6 @@ import { toast } from "./toast";
 import { Artifact } from "./artifact";
 import { Messages } from "./messages";
 import { MultimodalInput } from "./multimodal-input";
-import { getChatHistoryPaginationKey } from "./sidebar-history";
 import { getChatMetadataAndMessages } from "@ai-chatbot/app/api/route";
 
 export function Chat({
@@ -64,9 +61,6 @@ export function Chat({
       message: body.messages.at(-1),
       selectedChatModel: initialChatModel,
     }),
-    onFinish: () => {
-      mutate(unstable_serialize(getChatHistoryPaginationKey));
-    },
     onError: (error) => {
       if (error instanceof ChatSDKError) {
         toast({

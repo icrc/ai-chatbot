@@ -8,6 +8,11 @@
     "chatLog": {
         "thinkingPrompt": "Hmm..."
     },
+    "toast": {
+        "hidingChat": "Masquer le chat...",
+        "chatHiddenSuccessfully": "Chat masqué avec succès",
+        "failedToHideChat": "Échec du masquage du chat : {{error}}"
+    },
     "topBar": {},
     "sideBar": {
         "newChat": "Nouvelle conversation",
@@ -20,7 +25,13 @@
             "lastThirtyDays": "30 derniers jours",
             "olderThanLastMonth": "Plus ancien que le mois dernier",
             "reachedTheEndOfChatHistory": "Vous avez atteint la fin de votre historique de conversation.",
-            "loadingChats": "Chargement des conversations..."
+            "loadingChats": "Chargement des conversations...",
+            "more": "Plus",
+            "share": "Partager",
+            "private": "Privé",
+            "public": "Public",
+            "delete": "Supprimer",
+            "hide": "Masquer"
         },
         "sideMenu": {
             "loadingAuthStatus": "Chargement du statut d'authentification",
@@ -32,9 +43,15 @@
     },
     "alertDialog": {
         "termsOfUseTitle": "Conditions d'utilisation",
-        "acceptButton": "Accepter"
+        "acceptButton": "Accepter",
+        "deleteChatWarningTitle": "Êtes-vous absolument sûr ?",
+        "deleteChatWarningDescription": "Cette action ne peut pas être annulée. Cela masquera définitivement votre chat et le supprimera de votre historique.",
+        "deleteChatWarningCancelButton": "Annuler",
+        "deleteChatWarningContinueButton": "Continuer"
     },
     "userSettingsDialog": {
+        "settingsTitle": "Paramètres",
+        "settingsDescription": "Modifier les paramètres de l'utilisateur",
         "language": "Langue",
         "selectLanguage": "Sélectionnez votre langue par défaut pour l'interface de l'application.",
         "theme": "Thème",
@@ -70,7 +87,7 @@
         "accept": "Accepter",
         "errorProcessingRequest": "Erreur lors du traitement de la demande. Veuillez réessayer.",
         "settings": "Paramètres",
-         "retry": "Réessayer",
+        "retry": "Réessayer",
         "openTicket": "Ouvrir un ticket"
     },
     "markdownRenderer": {
