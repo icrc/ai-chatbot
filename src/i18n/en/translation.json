@@ -15,6 +15,11 @@
         "viewIn": "View in",
         "viewOriginalFile": "View original file"
     },
+    "toast": {
+        "hidingChat": "Hiding chat...",
+        "chatHiddenSuccessfully": "Chat hidden successfully",
+        "failedToHideChat": "Failed to hide chat: {{error}}"
+    },
     "topBar": {},
     "sideBar": {
         "newChat": "New Chat",
@@ -27,7 +32,13 @@
             "lastThirtyDays": "Last 30 days",
             "olderThanLastMonth": "Older than last month",
             "reachedTheEndOfChatHistory": "You have reached the end of your chat history.",
-            "loadingChats": "Loading Chats..."
+            "loadingChats": "Loading Chats...",
+            "more": "More",
+            "share": "Share",
+            "private": "Private",
+            "public": "Public",
+            "delete": "Delete",
+            "hide": "Hide"
         },
         "sideMenu": {
             "loadingAuthStatus": "Loading auth status",
@@ -41,11 +52,13 @@
         "termsOfUseTitle": "Terms of Use",
         "acceptButton": "Accept",
         "deleteChatWarningTitle": "Are you absolutely sure?",
-        "deleteChatWarningDescription": "This action cannot be undone. This will permanently delete your chat and remove it from our servers.",
+        "deleteChatWarningDescription": "This action cannot be undone. This will permanently hide your chat and remove it from your history.",
         "deleteChatWarningCancelButton": "Cancel",
         "deleteChatWarningContinueButton": "Continue"
     },
     "userSettingsDialog": {
+        "settingsTitle": "Settings",
+        "settingsDescription": "Change user settings",
         "language": "Language",
         "selectLanguage": "Select your default language for the application interface.",
         "theme": "Theme",

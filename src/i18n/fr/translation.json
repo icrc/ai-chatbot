@@ -20,6 +20,11 @@
         "chatHiddenSuccessfully": "Chat masqué avec succès",
         "failedToHideChat": "Échec de la dissimulation du chat : {{error}}"
     },
+    "toast": {
+        "hidingChat": "Masquer le chat...",
+        "chatHiddenSuccessfully": "Chat masqué avec succès",
+        "failedToHideChat": "Échec du masquage du chat : {{error}}"
+    },
     "topBar": {},
     "sideBar": {
         "newChat": "Nouveau chat",
@@ -57,6 +62,8 @@
         "deleteChatWarningContinueButton": "Continuer"
     },
     "userSettingsDialog": {
+        "settingsTitle": "Paramètres",
+        "settingsDescription": "Modifier les paramètres de l'utilisateur",
         "language": "Langue",
         "selectLanguage": "Sélectionnez la langue par défaut pour l'interface de l'application.",
         "theme": "Thème",
@@ -92,7 +99,7 @@
         "accept": "Accepter",
         "errorProcessingRequest": "Erreur lors du traitement de la demande. Veuillez réessayer.",
         "settings": "Paramètres",
-         "retry": "Réessayer",
+        "retry": "Réessayer",
         "openTicket": "Ouvrir un ticket"
     },
     "markdownRenderer": {
