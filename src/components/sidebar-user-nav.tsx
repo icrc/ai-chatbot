@@ -1,16 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 import { useTheme } from "next-themes";
 import { ChevronUp } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { getOAuthUserName } from "@ai-chatbot/auth/use-auth-config";
 import {
   type ThemeTypeOptions,
   themeTypes,
   useCoreContext,
-} from "@ai-chatbot/app/core-context";
+} from "@ai-chatbot/app/contexts/core-context";
 import {
   type ChatModeKeyOptions,
   LanguageKeyOptions,

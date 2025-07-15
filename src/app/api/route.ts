@@ -315,12 +315,12 @@ export async function streamAnswer(
                 const chunk = decoder.decode(value, { stream: true });
                 accumulatedAnswer += chunk;
                 onStream(chunk, newChatId);
-                if (done === true) {
-                    window._mtm = window._mtm || [];
-                    window._mtm.push({
-                        event: 'answer-complete',
-                    });
-                }
+                // if (done === true) {
+                //     window._mtm = window._mtm || [];
+                //     window._mtm.push({
+                //         event: 'answer-complete',
+                //     });
+                // }
             }
         }
         return {

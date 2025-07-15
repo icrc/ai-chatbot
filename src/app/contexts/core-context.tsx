@@ -28,8 +28,8 @@ import {
   ThemeOptions,
   type User,
   type UserLanguageOption,
-} from "./api/models";
-import { getUserSettings, postUser } from "./api/route";
+} from "../api/models";
+import { getUserSettings, postUser } from "../api/route";
 import FullPageStatus from "@ai-chatbot/components/full-page-status/full-page-status";
 
 export interface ThemeTypeOptions {
@@ -112,6 +112,8 @@ const defaultCoreContext = {
   setUserSettings: (() => {}) as React.Dispatch<
     React.SetStateAction<ContextUserSettings | undefined>
   >,
+  userSuggestions: undefined as any,
+  setUserSuggestions: (() => {}) as React.Dispatch<React.SetStateAction<any>>,
 };
 
 type CoreContextProps = typeof defaultCoreContext;
@@ -154,6 +156,7 @@ const CoreProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [userSettings, setUserSettings] = useState<
     ContextUserSettings | undefined
   >();
+  const [userSuggestions, setUserSuggestions] = useState<any>();
 
   const [alertOpen, setAlertOpen] = useState<boolean>(false);
 
@@ -260,7 +263,7 @@ const CoreProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     };
   }, [chatModes, knowledgeBases, languageModels, user, userError]);
 
-    if (!user && !userError && !chatModesError) {
+  if (!user && !userError && !chatModesError) {
     return <FullPageStatus isLoading />;
   }
 
@@ -295,6 +298,8 @@ const CoreProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         setSelectedLanguage,
         userSettings,
         setUserSettings,
+        userSuggestions,
+        setUserSuggestions,
       }}
     >
       {!user?.tou?.valid && <FullPageStatus variant="termsOfUse" />}

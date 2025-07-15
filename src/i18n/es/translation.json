@@ -3,7 +3,8 @@
         "loading": "Cargando...",
         "unableToSignIn": "No se puede iniciar sesión: {{error}}",
         "greeting": "¡Hola!",
-        "greetingHelp": "¿Cómo puedo ayudarte hoy?"
+        "greetingHelp": "¿Cómo puedo ayudarte hoy?",
+        "newChat": "Nuevo chat"
     },
     "chatLog": {
         "thinkingPrompt": "Hmm...",
@@ -20,14 +21,8 @@
         "chatHiddenSuccessfully": "Chat ocultado con éxito",
         "failedToHideChat": "Error al ocultar chat: {{error}}"
     },
-    "toast": {
-        "hidingChat": "Ocultando chat...",
-        "chatHiddenSuccessfully": "Chat ocultado con éxito",
-        "failedToHideChat": "No se pudo ocultar el chat: {{error}}"
-    },
     "topBar": {},
     "sideBar": {
-        "newChat": "Nuevo chat",
         "noConversations": "Tus conversaciones aparecerán aquí una vez que comiences a chatear.",
         "revisitPreviousChats": "Inicia sesión para guardar y revisar conversaciones anteriores.",
         "conversations": {

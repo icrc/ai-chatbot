@@ -1,20 +1,26 @@
-import { UserLanguageOption } from "@ai-chatbot/app/api/models";
-import { languageTypes, useCoreContext } from "@ai-chatbot/app/core-context";
+import { type FC, type ReactNode, useState } from "react";
 import i18next from "i18next";
-import { FC, ReactNode, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { StatusModal } from "../ui/status-modal";
 import {
   CheckIcon,
   ExternalLink,
-  Info,
   InfoIcon,
   RefreshCcw,
   SettingsIcon,
   TriangleAlert,
 } from "lucide-react";
+import {
+  getCorrelationId,
+  postLanguageType,
+  postTOU,
+} from "@ai-chatbot/app/api/route";
+import type { UserLanguageOption } from "@ai-chatbot/app/api/models";
+import {
+  languageTypes,
+  useCoreContext,
+} from "@ai-chatbot/app/contexts/core-context";
 import { Markdown } from "../markdown";
-import { getCorrelationId, postLanguageType, postTOU } from "@ai-chatbot/app/api/route";
+import { StatusModal } from "../ui/status-modal";
 
 interface FullPageStatusProps {
   message?: string;
@@ -75,14 +81,14 @@ const FullPageStatus: FC<FullPageStatusProps> = ({
   >(userSettings?.defaultLanguage || currentLanguageType);
   const [TOUContent, setTOUContent] = useState(user?.tou?.content);
 
-  useEffect(() => {
-    if (variant === "termsOfUse" && touValid) {
-      window._mtm = window._mtm || [];
-      window._mtm.push({
-        event: "session-ready",
-      });
-    }
-  }, [variant, touValid]);
+  // useEffect(() => {
+  //   if (variant === "termsOfUse" && touValid) {
+  //     window._mtm = window._mtm || [];
+  //     window._mtm.push({
+  //       event: "session-ready",
+  //     });
+  //   }
+  // }, [variant, touValid]);
 
   const acceptTermsOfUse = async (version: string) => {
     setProcessing(ProcessingOptions.Processing);
@@ -119,12 +125,13 @@ const FullPageStatus: FC<FullPageStatusProps> = ({
   const getIncidentUrl = (): string => {
     const correlationId = getCorrelationId();
     return (
+      // biome-ignore lint/style/useTemplate: The link is divided this way so that we can know each part of the information we are sending
       "https://smt.ext.icrc.org/esc" +
       "?id=sc_cat_item&sys_id=d05584bc703e2550262dfaa747994d6e" + // 'ICT internal request' catalog item
       "&service=05fd7e08340f021073281257c2f34ced" + // 'ICT internal request' "Service" field - X by default
       "&group=f7518d3df488625073280ff443bd4e06" + // 'ICT internal request' "Choose the assignment team" field - AI L2 Support by default
-      `${correlationId && `&correlation_id=${correlationId}`}`
-    ); // 'ICT internal request' "Describe your request" field with the correlation Id, if it exists
+      `${correlationId && `&correlation_id=${correlationId}`}` // 'ICT internal request' "Describe your request" field with the correlation Id, if it exists
+    );
   };
 
   const handleOpenTicketOrReportErrorUrl = (): void => {
@@ -151,7 +158,9 @@ const FullPageStatus: FC<FullPageStatusProps> = ({
           <p>{t("fullPageStatus.existingAccess")}</p>
         </>
       ),
-      titleIcon: <TriangleAlert className="title-icon title-icon--warning" />,
+      titleIcon: (
+        <TriangleAlert className="title-icon title-icon--warning gap-2" />
+      ),
       buttonContent: t("fullPageStatus.retry"),
       buttonIcon: <RefreshCcw className="cta-button-icon" />,
       handleClick: clearStorageAndRefresh,
@@ -165,7 +174,9 @@ const FullPageStatus: FC<FullPageStatusProps> = ({
           <p>{t("fullPageStatus.assistance")}</p>
         </>
       ),
-      titleIcon: <TriangleAlert className="title-icon title-icon--warning" />,
+      titleIcon: (
+        <TriangleAlert className="title-icon title-icon--warning gap-2" />
+      ),
       buttonContent: t("fullPageStatus.retry"),
       buttonIcon: <RefreshCcw className="cta-button-icon" />,
       handleClick: clearStorageAndRefresh,

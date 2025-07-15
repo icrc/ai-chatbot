@@ -3,7 +3,8 @@
         "loading": "Loading...",
         "unableToSignIn": "Unable to sign-in: {{error}}",
         "greeting": "Hello there!",
-        "greetingHelp": "How can I help you today?"
+        "greetingHelp": "How can I help you today?",
+        "newChat": "New Chat"
     },
     "chatLog": {
         "thinkingPrompt": "Hmm...",
@@ -22,7 +23,6 @@
     },
     "topBar": {},
     "sideBar": {
-        "newChat": "New Chat",
         "noConversations": "Your conversations will appear here once you start chatting!",
         "revisitPreviousChats": "Login to save and revisit previous chats!",
         "conversations": {

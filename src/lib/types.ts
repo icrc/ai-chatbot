@@ -1,3 +1,5 @@
+import type { Chat, Message } from "@ai-chatbot/app/api/models";
+
 export type DataPart = { type: 'append-message'; message: string };
 
 export type Document = {
@@ -53,3 +55,26 @@ export enum FileMode {
   View = "view",
   Edit = "edit",
 } 
+
+export interface ChatSession {
+  chat?: Chat; // chat metadata loaded from the API
+  messages?: Message[]; // chat messages loaded from the API
+  isLoadingMessages: boolean;
+  loadingMessagesError: Error | null;
+  streamingAnswer: string;
+  streamingChatId: string | null;
+  isProcessingPrompt: boolean;
+  processingPromptError: Error | null;
+  processingPromptInputValue: string;
+  inputValue: string;
+  shouldAutoScroll: boolean;
+  localSessionId: number; // local id to check if request responses should be ignored
+  hasSubmittedStopStream: boolean;
+}
+
+export enum ChatStatus {
+  Submitted = "submitted",
+  Streaming = "streaming",
+  Ready = "ready",
+  Error = "error",
+}

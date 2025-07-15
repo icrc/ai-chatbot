@@ -1,25 +1,47 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useChat } from "@ai-sdk/react";
+import { useEffect, useRef, useState } from "react";
 import useSWR, { useSWRConfig } from "swr";
-import { useSearchParams } from "next/navigation";
+import { navigateTo } from "@ai-chatbot/lib/utils";
 import { ChatHeader } from "@ai-chatbot/components/chat-header";
-import { fetchWithErrorHandlers, generateUUID } from "@ai-chatbot/lib/utils";
 import { useArtifactSelector } from "@ai-chatbot/hooks/use-artifact";
-import { ChatSDKError } from "@ai-chatbot/lib/errors";
-import type { Vote } from "@ai-chatbot/lib/types";
+import { type ChatSession, ChatStatus, type Vote } from "@ai-chatbot/lib/types";
 import {
-  MessageRoles,
+  ChatModeKeyOptions,
   type Source,
-  type ChatModeKeyOptions,
   type Message,
+  type ChatMode,
+  type Chat as ChatModel,
 } from "@ai-chatbot/app/api/models";
+import {
+  getChatMetadataAndMessages,
+  stopStreamByChatId,
+  streamAnswer,
+} from "@ai-chatbot/app/api/route";
+import { useCoreContext } from "@ai-chatbot/app/contexts/core-context";
 import { toast } from "./toast";
 import { Artifact } from "./artifact";
 import { Messages } from "./messages";
 import { MultimodalInput } from "./multimodal-input";
-import { getChatMetadataAndMessages } from "@ai-chatbot/app/api/route";
+
+const initialChatSessionState: Omit<ChatSession, "localSessionId"> = {
+  chat: undefined,
+  messages: undefined,
+  isLoadingMessages: false,
+  loadingMessagesError: null,
+  streamingAnswer: "",
+  streamingChatId: null,
+  isProcessingPrompt: false,
+  processingPromptError: null,
+  processingPromptInputValue: "",
+  inputValue: "",
+  shouldAutoScroll: false,
+  hasSubmittedStopStream: false,
+};
+
+interface ProcessPromptOptions {
+  isRetry?: boolean;
+}
 
 export function Chat({
   id: chatId,
@@ -34,62 +56,194 @@ export function Chat({
   isReadonly: boolean;
   autoResume: boolean;
 }) {
-  const { mutate } = useSWRConfig();
-  const [apiMessages, setApiMessages] = useState<Message[]>([]);
-
   const {
-    // messages,
-    // setMessages,
-    handleSubmit,
-    input,
-    setInput,
-    append,
-    status,
-    stop,
-    reload,
-    experimental_resume,
-    data,
-  } = useChat({
-    id: chatId,
-    initialMessages,
-    experimental_throttle: 100,
-    sendExtraMessageFields: true,
-    generateId: generateUUID,
-    fetch: fetchWithErrorHandlers,
-    experimental_prepareRequestBody: (body) => ({
-      id: chatId,
-      message: body.messages.at(-1),
-      selectedChatModel: initialChatModel,
-    }),
-    onError: (error) => {
-      if (error instanceof ChatSDKError) {
-        toast({
-          type: "error",
-          description: error.message,
-        });
-      }
-    },
+    chatModes,
+    currentKnowledgeBase,
+    currentLanguageModel,
+    setUserSuggestions,
+  } = useCoreContext();
+
+  const [status, setStatus] = useState<ChatStatus>(ChatStatus.Ready);
+  const [input, setInput] = useState<string>("");
+  const [currentChatSession, setCurrentChatSession] = useState<ChatSession>({
+    ...initialChatSessionState,
+    localSessionId: Date.now(),
   });
+  const [previousChats, setPreviousChats] = useState<ChatModel[]>([]);
+  const [currentChatMode, setCurrentChatMode] = useState<ChatMode>(
+    chatModes[0]
+  );
 
-  const searchParams = useSearchParams();
-  const query = searchParams.get("query");
+  // to check if request responses should be ignored
+  const currentLocalSessionIdRef = useRef<number>(
+    currentChatSession.localSessionId
+  );
 
-  const [hasAppendedQuery, setHasAppendedQuery] = useState(false);
+  const processPrompt = async (
+    inputValue: string,
+    options?: ProcessPromptOptions
+  ) => {
+    const { isRetry = false } = options || {};
+    const localSessionId = currentLocalSessionIdRef.current;
 
-  useEffect(() => {
-    if (query && !hasAppendedQuery) {
-      append({
-        role: MessageRoles.User,
-        content: query,
-      });
+    try {
+      // initialize streaming state
+      setCurrentChatSession((prev) => ({
+        ...prev,
+        isProcessingPrompt: true,
+        processingPromptError: null,
+        processingPromptInputValue: inputValue,
+        inputValue: isRetry ? prev.inputValue : "", // keep current input text if retrying a failed prompt
+        streamingAnswer: "", // reset streaming answer
+        shouldAutoScroll: true, // enable auto-scroll on prompt submission
+      }));
 
-      setHasAppendedQuery(true);
-      window.history.replaceState({}, "", `/chat/${chatId}`);
+      // on stream handler to pass as param to stream answer from the API stream request
+      const onStream = (chunk: string, chatId: string | null) => {
+        // only process response if still on the same session, otherwise ignore
+        if (localSessionId === currentLocalSessionIdRef.current) {
+          setCurrentChatSession((prev) => ({
+            ...prev,
+            streamingAnswer: prev.streamingAnswer + chunk,
+            streamingChatId: chatId,
+          }));
+        }
+        // setStatus(ChatStatus.Streaming);
+      };
+
+      // start streaming answer and append streamed answer chunks
+      const { userPrompt, finalAnswer, newChatId } = await streamAnswer(
+        onStream,
+        inputValue,
+        currentChatMode.key,
+        localSessionId,
+        currentLocalSessionIdRef,
+        currentChatSession.chat?.id ??
+          (currentChatSession.streamingChatId as string), // if not provided, use the generated newChatId to save final streamed answer
+        currentLanguageModel?.key,
+        currentKnowledgeBase?.key
+      );
+
+      // only process response if still on the same session, otherwise ignore
+      if (
+        localSessionId === currentLocalSessionIdRef.current &&
+        userPrompt &&
+        finalAnswer
+      ) {
+        const chatIdFromStreamedAnswer =
+          currentChatSession?.chat?.id || newChatId;
+
+        if (!chatIdFromStreamedAnswer) {
+          // setStatus(ChatStatus.Error);
+          throw new Error(
+            "Could not retrieve a valid chat identifier to process the prompt."
+          );
+        }
+
+        // get updated metadata and messages (chat title, message source documents, etc.)
+        const res = await getChatMetadataAndMessages(chatIdFromStreamedAnswer);
+
+        if (localSessionId === currentLocalSessionIdRef.current) {
+          if (!res?.id || !res?.messages?.length) {
+            // setStatus(ChatStatus.Error);
+            throw new Error(
+              "Could not retrieve valid chat session data while processing the prompt."
+            );
+          }
+
+          // render the saved chat/messages with any new generated metadata, e.g. title
+          setCurrentChatSession((prev) => ({
+            ...prev,
+            chat: res,
+            messages: res.messages,
+            isProcessingPrompt: false,
+            hasSubmittedStopStream: false,
+            processingPromptInputValue: "",
+            streamingChatId: res.id,
+          }));
+
+          // filter out the updated/new chat and unshift it as the first in the previous chat list
+          setPreviousChats((prevChats) => {
+            const filteredChats =
+              prevChats?.filter?.((chat) => chat.id !== res.id) || [];
+            return [res, ...filteredChats];
+          });
+
+          setUserSuggestions(res.knowledge_base?.examples ?? []);
+
+          navigateTo(`/chat/${chatIdFromStreamedAnswer}`);
+        }
+      }
+    } catch (err) {
+      if (localSessionId === currentLocalSessionIdRef.current) {
+        console.error(
+          `Error while processing prompt: ${(err as Error).message}`
+        );
+        setCurrentChatSession((prev) => ({
+          ...prev,
+          isProcessingPrompt: false,
+          hasSubmittedStopStream: false,
+          processingPromptError: new Error(
+            `Error while processing prompt: ${(err as Error).message}`
+          ),
+        }));
+        // setStatus(ChatStatus.Error);
+      }
+    } finally {
+      // setStatus(ChatStatus.Ready);
     }
-  }, [query, append, hasAppendedQuery, chatId]);
+  };
+
+  // attempt to stop stream, BE should stop the current stream as soon as possible
+  const stopCurrentStream = () => {
+    const chatIdToStopStream =
+      currentChatSession.chat?.id || currentChatSession.streamingChatId;
+
+    if (chatIdToStopStream && currentChatSession.isProcessingPrompt) {
+      setCurrentChatSession({
+        ...currentChatSession,
+        hasSubmittedStopStream: true,
+      });
+      stopStreamByChatId(chatIdToStopStream);
+      // setStatus(ChatStatus.Ready);
+    }
+    // window._mtm = window._mtm || [];
+    // window._mtm.push({
+    //   event: "stopStreaming-click",
+    // });
+  };
+
+  const openNewChatCreationMenu = () => {
+    const newLocalSessionId = Date.now();
+    setCurrentChatSession({
+      ...initialChatSessionState,
+      localSessionId: newLocalSessionId,
+    });
+
+    if (currentChatMode.key === ChatModeKeyOptions.Generic)
+      return navigateTo(`/${currentChatMode.key}/${currentLanguageModel?.key}`);
+
+    if (currentChatMode.key === ChatModeKeyOptions.Documents)
+      return navigateTo(`/${currentChatMode.key}/${currentKnowledgeBase?.key}`);
+  };
+
+  // const searchParams = useSearchParams();
+  // const query = searchParams.get("query");
+
+  // const [hasAppendedQuery, setHasAppendedQuery] = useState(false);
+
+  // useEffect(() => {
+  //   if (query && !hasAppendedQuery) {
+  //     setHasAppendedQuery(true);
+  //     navigateTo(`/chat/${chatId}`);
+  //   }
+  // }, [query, hasAppendedQuery, chatId]);
 
   const { data: votes } = useSWR<Array<Vote>>(
-    apiMessages.length >= 2 ? `/api/vote?chatId=${chatId}` : null
+    currentChatSession?.messages?.length &&
+      currentChatSession.messages.length >= 2
+      ? `/api/vote?chatId=${chatId}`
+      : null
   );
 
   const [attachments, setAttachments] = useState<Array<[string, Source]>>([]);
@@ -97,9 +251,16 @@ export function Chat({
   const isArtifactVisible = useArtifactSelector((state) => state.isVisible);
 
   useEffect(() => {
-    if (chatId && !apiMessages.length) {
+    if (chatId && !currentChatSession?.messages?.length) {
       getChatMetadataAndMessages(chatId).then((chatData) => {
-        setApiMessages(chatData.messages);
+        setCurrentChatSession((prev) => ({
+          ...prev,
+          chat: chatData,
+          messages: chatData.messages,
+          isProcessingPrompt: false,
+          hasSubmittedStopStream: false,
+          processingPromptInputValue: "",
+        }));
 
         let sourcesEntries: [string, Source][] = [];
         chatData.messages.forEach((message) => {
@@ -110,10 +271,25 @@ export function Chat({
             sourcesEntries = [...entries];
           }
         });
-        console.info({ chatData, sourcesEntries });
+        // console.info({ chatData, sourcesEntries });
       });
     }
-  }, [chatId, apiMessages, attachments]);
+  }, [chatId, currentChatSession?.messages, attachments]);
+
+  const handleSubmit = async () => {
+    // setStatus(ChatStatus.Submitted);
+
+    await processPrompt(input);
+  };
+
+  const setMessages = (messages: Message[] | undefined) => {
+    setCurrentChatSession((prevChatSession) => {
+      return {
+        ...prevChatSession,
+        messages,
+      };
+    });
+  };
 
   return (
     <>
@@ -123,10 +299,12 @@ export function Chat({
         <Messages
           chatId={chatId}
           status={status}
+          setStatus={setStatus}
           votes={votes}
-          messages={apiMessages}
-          setMessages={setApiMessages}
-          reload={reload}
+          messages={currentChatSession?.messages as Message[]}
+          reload={() => {
+            return "";
+          }}
           isReadonly={isReadonly}
           isArtifactVisible={isArtifactVisible}
         />
@@ -139,12 +317,12 @@ export function Chat({
               setInput={setInput}
               handleSubmit={handleSubmit}
               status={status}
-              stop={stop}
+              setStatus={setStatus}
+              stop={stopCurrentStream}
               attachments={attachments}
               setAttachments={setAttachments}
-              messages={apiMessages}
-              setMessages={setApiMessages}
-              append={append}
+              messages={currentChatSession?.messages as Message[]}
+              setMessages={setMessages}
             />
           )}
         </form>
@@ -156,15 +334,17 @@ export function Chat({
         setInput={setInput}
         handleSubmit={handleSubmit}
         status={status}
-        stop={stop}
+        stop={stopCurrentStream}
         attachments={attachments}
         setAttachments={setAttachments}
-        append={append}
-        messages={apiMessages}
-        setMessages={setApiMessages}
-        reload={reload}
+        messages={currentChatSession?.messages as Message[]}
+        reload={() => {
+          return "";
+        }}
         votes={votes}
         isReadonly={isReadonly}
+        setMessages={setMessages}
+        setStatus={setStatus}
       />
     </>
   );

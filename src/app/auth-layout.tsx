@@ -11,7 +11,7 @@ import { AppSidebar } from '@ai-chatbot/components/app-sidebar';
 import { useAuthConfig } from '@ai-chatbot/auth/use-auth-config';
 import { ThemeProvider } from '@ai-chatbot/components/theme-provider';
 import { SidebarInset, SidebarProvider } from '@ai-chatbot/components/ui/sidebar';
-import { CoreProvider } from './core-context';
+import { CoreProvider } from './contexts/core-context';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

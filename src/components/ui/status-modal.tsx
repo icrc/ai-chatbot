@@ -1,9 +1,9 @@
-import React, { JSX } from "react";
-import { useTranslation } from "react-i18next";
-import { UserLanguageOption } from "@ai-chatbot/app/api/models";
-import { languageTypes, useCoreContext } from "@ai-chatbot/app/core-context";
-import { Dropdown } from "./dropdown";
+import React, { type JSX } from "react";
 import { CrossIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import type { UserLanguageOption } from "@ai-chatbot/app/api/models";
+import { languageTypes, useCoreContext } from "@ai-chatbot/app/contexts/core-context";
+import { Dropdown } from "./dropdown";
 import {
   GenericDialog,
   GenericDialogAction,
@@ -94,8 +94,8 @@ export const StatusModal: React.FC<StatusModalProps> = ({
                 onClick={onClose}
                 aria-label={t("fullPageStatus.closeWindowAriaLabel")}
                 tabIndex={0}
-                onKeyDown={(e) =>
-                  (e.key === "Enter" || e.key === " ") && onClose?.()
+                onKeyDown={(ev) =>
+                  (ev.key === "Enter" || ev.key === " ") && onClose?.()
                 }
               />
             )}

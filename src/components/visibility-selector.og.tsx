@@ -2,6 +2,12 @@
 
 import { useMemo, useState } from 'react';
 import { cn } from '@ai-chatbot/lib/utils';
+import { useCoreContext } from '@ai-chatbot/app/contexts/core-context';
+import {
+  ChatModeKeyOptions,
+  type KnowledgeBaseKeyOptions,
+  type LanguageModelKeyOptions,
+} from '@ai-chatbot/app/api/models';
 import { Button } from './ui/button';
 import {
   BotIcon,
@@ -15,12 +21,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
-import { useCoreContext } from '@ai-chatbot/app/core-context';
-import {
-  ChatModeKeyOptions,
-  type KnowledgeBaseKeyOptions,
-  type LanguageModelKeyOptions,
-} from '@ai-chatbot/app/api/models';
 
 export type VisibilityType = 'private' | 'public';
 
