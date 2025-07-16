@@ -1,21 +1,19 @@
-import { type Dispatch, memo, type SetStateAction } from 'react';
-import type { UIMessage } from 'ai';
-import equal from 'fast-deep-equal';
-import { motion } from 'framer-motion';
-import type { UseChatHelpers } from '@ai-sdk/react';
-import type { Vote } from '@ai-chatbot/lib/types';
-import { useMessages } from '@ai-chatbot/hooks/use-messages';
-import { Greeting } from './greeting';
-import { PreviewMessage, ThinkingMessage } from './message';
-import { MessageRoles, type Chat, type Message } from '@ai-chatbot/app/api/models';
+import { type Dispatch, memo, type SetStateAction } from "react";
+import equal from "fast-deep-equal";
+import { motion } from "framer-motion";
+import { ChatStatus, type Vote } from "@ai-chatbot/lib/types";
+import { useMessages } from "@ai-chatbot/hooks/use-messages";
+import { MessageRoles, type Message } from "@ai-chatbot/app/api/models";
+import { Greeting } from "./greeting";
+import { PreviewMessage, ThinkingMessage } from "./message";
 
 interface MessagesProps {
   chatId: string;
-  status: UseChatHelpers['status'];
+  status: ChatStatus;
+  setStatus: Dispatch<SetStateAction<ChatStatus>>;
   votes: Array<Vote> | undefined;
-  messages: Array<Message>;
-  setMessages: Dispatch<SetStateAction<Message[]>>;
-  reload: UseChatHelpers['reload'];
+  messages: Array<Message> | undefined;
+  reload: any;
   isReadonly: boolean;
   isArtifactVisible: boolean;
 }
@@ -23,9 +21,9 @@ interface MessagesProps {
 function PureMessages({
   chatId,
   status,
+  setStatus,
   votes,
   messages,
-  setMessages,
   reload,
   isReadonly,
 }: MessagesProps) {
@@ -45,29 +43,35 @@ function PureMessages({
       ref={messagesContainerRef}
       className="flex flex-col min-w-0 gap-6 flex-1 overflow-y-scroll pt-4 relative"
     >
-      {messages.length === 0 && <Greeting />}
+      {messages?.length === 0 && <Greeting />}
 
-      {messages.map((message, index) => (
+      {messages?.map((message, index) => (
         <PreviewMessage
           key={message.id}
           chatId={chatId}
           message={message}
-          isLoading={status === 'streaming' && messages.length - 1 === index}
+          isLoading={
+            (status === ChatStatus.Streaming &&
+              index === (messages?.length && messages.length - 1)) ??
+            false
+          }
           vote={
             votes
               ? votes.find((vote) => vote.messageId === message.id)
               : undefined
           }
-          setMessages={setMessages}
           reload={reload}
           isReadonly={isReadonly}
           requiresScrollPadding={
-            hasSentMessage && index === messages.length - 1
+            (hasSentMessage &&
+              index === (messages?.length && messages.length - 1)) ??
+            false
           }
         />
       ))}
 
-      {status === 'submitted' &&
+      {status === ChatStatus.Submitted &&
+        messages?.length &&
         messages.length > 0 &&
         messages[messages.length - 1].role === MessageRoles.User && (
           <ThinkingMessage />
@@ -88,7 +92,7 @@ export const Messages = memo(PureMessages, (prevProps, nextProps) => {
 
   if (prevProps.status !== nextProps.status) return false;
   if (prevProps.status && nextProps.status) return false;
-  if (prevProps.messages.length !== nextProps.messages.length) return false;
+  if (prevProps.messages?.length !== nextProps.messages?.length) return false;
   if (!equal(prevProps.messages, nextProps.messages)) return false;
   if (!equal(prevProps.votes, nextProps.votes)) return false;
 

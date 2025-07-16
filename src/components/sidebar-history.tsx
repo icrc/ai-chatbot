@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useParams, useRouter } from "next/navigation";
 import { isToday, isYesterday, subMonths, subWeeks } from "date-fns";
 import { getChats, hideChat } from "@ai-chatbot/app/api/route";
+import { useCoreContext } from "@ai-chatbot/app/contexts/core-context";
 import { ChatModeKeyOptions, type Chat } from "@ai-chatbot/app/api/models";
 import {
   SidebarGroup,
@@ -36,10 +37,11 @@ type GroupedChats = {
 
 export function SidebarHistory({ user }: { user: string | undefined }) {
   const { setOpenMobile } = useSidebar();
+  const { userSuggestions, setUserSuggestions } = useCoreContext();
   const { t } = useTranslation();
   const { id } = useParams();
-
   const router = useRouter();
+
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -49,10 +51,11 @@ export function SidebarHistory({ user }: { user: string | undefined }) {
 
   useEffect(() => {
     // FIXME
-    getChats(ChatModeKeyOptions.Documents).then((data) => {
+    getChats(ChatModeKeyOptions.Generic).then((data) => {
       setChatHistory([...data]);
+      setUserSuggestions(data[0].knowledge_base?.examples);
     });
-  }, []);
+  }, [userSuggestions]);
 
   const groupChatsByDate = (chats: Chat[]): GroupedChats => {
     const now = new Date();
@@ -325,7 +328,10 @@ export function SidebarHistory({ user }: { user: string | undefined }) {
             <AlertDialogCancel className="cursor-pointer">
               {t("alertDialog.deleteChatWarningCancelButton")}
             </AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} className="cursor-pointer">
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="cursor-pointer"
+            >
               {t("alertDialog.deleteChatWarningContinueButton")}
             </AlertDialogAction>
           </AlertDialogFooter>

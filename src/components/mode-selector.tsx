@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { startTransition, useMemo, useOptimistic, useState } from 'react';
-import { cn } from '@ai-chatbot/lib/utils';
-import type { ChatMode, ChatModeKeyOptions } from '@ai-chatbot/app/api/models';
-import { useCoreContext } from '@ai-chatbot/app/core-context';
-import { saveChatModeAsCookie } from '@ai-chatbot/app/actions';
+import { startTransition, useMemo, useOptimistic, useState } from "react";
+import { cn } from "@ai-chatbot/lib/utils";
+import { saveChatModeAsCookie } from "@ai-chatbot/app/actions";
+import { useCoreContext } from "@ai-chatbot/app/contexts/core-context";
+import type { ChatMode, ChatModeKeyOptions } from "@ai-chatbot/app/api/models";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from './ui/dropdown-menu';
-import { Button } from './ui/button';
-import { CheckCircleFillIcon, ChevronDownIcon } from './icons';
+} from "./ui/dropdown-menu";
+import { Button } from "./ui/button";
+import { CheckCircleFillIcon, ChevronDownIcon } from "./icons";
 
 export function ModeSelector({
   selectedModeId: selectedModeKey,
@@ -28,9 +28,9 @@ export function ModeSelector({
   const selectedChatMode = useMemo(
     () =>
       chatModes.find(
-        (chatMode: ChatMode) => chatMode.key === optimisticModeKey,
+        (chatMode: ChatMode) => chatMode.key === optimisticModeKey
       ),
-    [optimisticModeKey],
+    [optimisticModeKey]
   );
 
   return (
@@ -38,8 +38,8 @@ export function ModeSelector({
       <DropdownMenuTrigger
         asChild
         className={cn(
-          'w-fit data-[state=open]:bg-accent data-[state=open]:text-accent-foreground',
-          className,
+          "w-fit data-[state=open]:bg-accent data-[state=open]:text-accent-foreground",
+          className
         )}
       >
         <Button

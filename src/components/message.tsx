@@ -1,37 +1,11 @@
 "use client";
 
-import {
-  type Dispatch,
-  Fragment,
-  type JSX,
-  memo,
-  type SetStateAction,
-  useState,
-} from "react";
+import { Fragment, type JSX, memo, useState } from "react";
 import cx from "classnames";
-import { AnimatePresence, motion } from "framer-motion";
 import equal from "fast-deep-equal";
-import type { UseChatHelpers } from "@ai-sdk/react";
-import { cn } from "@ai-chatbot/lib/utils";
-import {
-  MessageRoles,
-  SourceFileTypes,
-  type Message,
-  type Source,
-} from "@ai-chatbot/app/api/models";
-import { FileIcon, PencilEditIcon, SparklesIcon } from "./icons";
-import { MessageActions } from "./message-actions";
-import { Button } from "./ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
-import { MessageEditor } from "./message-editor";
-import { MessageReasoning } from "./message-reasoning";
-import { DocumentToolCall, DocumentToolResult } from "./document";
-import { Markdown } from "./markdown";
-import { PreviewAttachment } from "./preview-attachment";
-import { Weather } from "./weather";
-import { DocumentPreview } from "./document-preview";
 import { useTranslation } from "react-i18next";
-import { FileMode } from "@ai-chatbot/lib/types";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDownIcon, ExternalLink } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -39,21 +13,24 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@radix-ui/react-accordion";
+import { cn } from "@ai-chatbot/lib/utils";
+import { FileMode } from "@ai-chatbot/lib/types";
+import type { UseChatHelpers } from "@ai-sdk/react";
 import {
-  ChevronDownIcon,
-  DownloadIcon,
-  ExternalLink,
-  GlobeIcon,
-  RouteIcon,
-  ShareIcon,
-} from "lucide-react";
+  MessageRoles,
+  SourceFileTypes,
+  type Message,
+  type Source,
+} from "@ai-chatbot/app/api/models";
+import { FileIcon, SparklesIcon } from "./icons";
+import { MessageActions } from "./message-actions";
+import { Markdown } from "./markdown";
 
 const PurePreviewMessage = ({
   chatId,
   message,
   vote,
   isLoading,
-  setMessages,
   reload,
   isReadonly,
   requiresScrollPadding,
@@ -62,7 +39,6 @@ const PurePreviewMessage = ({
   message: Message;
   vote: any | undefined;
   isLoading: boolean;
-  setMessages: Dispatch<SetStateAction<Message[]>>;
   reload: UseChatHelpers["reload"];
   isReadonly: boolean;
   requiresScrollPadding: boolean;
@@ -70,9 +46,9 @@ const PurePreviewMessage = ({
   const { t } = useTranslation();
 
   const [mode, setMode] = useState<FileMode>(FileMode.View);
-  const sourcesEntries: [string, Source][] = Object.entries(
-    message?.sources as Record<number, Source>
-  );
+  const sourcesEntries: [string, Source][] = message?.sources
+    ? Object.entries(message?.sources as Record<number, Source>)
+    : [];
 
   const getFileTypeLogoSrc = (fileType: string): string => {
     const fileTypeLogoMap: { [key: string]: string } = {
@@ -172,7 +148,7 @@ const PurePreviewMessage = ({
             {message.content && message.content.length > 0 && (
               <div
                 key={`message-${message.id}`}
-                className="flex flex-row gap-2 items-end justify-end"
+                className="flex flex-row gap-2 items-end justify-start"
               >
                 {/* TODO: this feature might not be available at the end */}
                 {/* 
@@ -217,7 +193,7 @@ const PurePreviewMessage = ({
               />
             )}
 
-            {message.role === MessageRoles.Assistant && (
+            {message.role === MessageRoles.Assistant && message.sources && (
               <Accordion
                 type="single"
                 collapsible

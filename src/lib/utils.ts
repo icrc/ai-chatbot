@@ -46,3 +46,7 @@ export function generateUUID(): string {
   );
   return result.length !== null ? result.slice(0, result.length) : result;
 }
+
+export function navigateTo(url: string, data: unknown = {}, unused = ""): void {
+  window.history.replaceState(data, unused, url);
+}

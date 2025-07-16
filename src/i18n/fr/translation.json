@@ -3,7 +3,8 @@
         "loading": "Chargement...",
         "unableToSignIn": "Impossible de se connecter : {{error}}",
         "greeting": "Bonjour !",
-        "greetingHelp": "Comment puis-je vous aider aujourd'hui ?"
+        "greetingHelp": "Comment puis-je vous aider aujourd'hui ?",
+        "newChat": "Nouveau chat"
     },
     "chatLog": {
         "thinkingPrompt": "Hmm...",
@@ -20,14 +21,8 @@
         "chatHiddenSuccessfully": "Chat masqué avec succès",
         "failedToHideChat": "Échec de la dissimulation du chat : {{error}}"
     },
-    "toast": {
-        "hidingChat": "Masquer le chat...",
-        "chatHiddenSuccessfully": "Chat masqué avec succès",
-        "failedToHideChat": "Échec du masquage du chat : {{error}}"
-    },
     "topBar": {},
     "sideBar": {
-        "newChat": "Nouveau chat",
         "noConversations": "Vos conversations apparaîtront ici dès que vous commencerez à discuter !",
         "revisitPreviousChats": "Connectez-vous pour sauvegarder et revoir vos conversations précédentes !",
         "conversations": {

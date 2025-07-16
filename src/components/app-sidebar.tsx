@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { getOAuthUserName } from '@ai-chatbot/auth/use-auth-config';
-import { Button } from './ui/button';
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
+import { getOAuthUserName } from "@ai-chatbot/auth/use-auth-config";
 import {
   Sidebar,
   SidebarContent,
@@ -11,15 +11,17 @@ import {
   SidebarHeader,
   SidebarMenu,
   useSidebar,
-} from './ui/sidebar';
-import { PlusIcon } from './icons';
-import { SidebarHistory } from './sidebar-history';
-import { SidebarUserNav } from './sidebar-user-nav';
-import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
+} from "./ui/sidebar";
+import { PlusIcon } from "./icons";
+import { Button } from "./ui/button";
+import { SidebarHistory } from "./sidebar-history";
+import { SidebarUserNav } from "./sidebar-user-nav";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export function AppSidebar() {
   const router = useRouter();
   const user = getOAuthUserName();
+  const { t } = useTranslation();
   const { setOpenMobile } = useSidebar();
 
   return (
@@ -45,15 +47,17 @@ export function AppSidebar() {
                   type="button"
                   className="p-2 h-fit"
                   onClick={() => {
-                    setOpenMobile(false);
-                    router.push('/');
-                    router.refresh();
+                    // setOpenMobile(false);
+                    // router.push("/");
+                    // router.refresh();
                   }}
                 >
                   <PlusIcon />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent align="end">New Chat</TooltipContent>
+              <TooltipContent align="end">
+                {t("general.newChat")}
+              </TooltipContent>
             </Tooltip>
           </div>
         </SidebarMenu>
