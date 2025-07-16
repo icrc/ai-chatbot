@@ -1,11 +1,15 @@
 "use client";
 
 import { memo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useWindowSize } from "usehooks-ts";
 import { useTranslation } from "react-i18next";
 import { navigateTo } from "@ai-chatbot/lib/utils";
-import { ChatModeKeyOptions } from "@ai-chatbot/app/api/models";
+import {
+  ChatModeKeyOptions,
+  type KnowledgeBaseKeyOptions,
+  type LanguageModelKeyOptions,
+} from "@ai-chatbot/app/api/models";
 import { useCoreContext } from "@ai-chatbot/app/contexts/core-context";
 import { Button } from "./ui/button";
 import { Dropdown } from "./ui/dropdown";
@@ -15,18 +19,21 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { BotIcon, FileIcon, LogoOpenAI, MetaIcon, PlusIcon } from "./icons";
 
 function PureChatHeader({
-  selectedModeId,
+  selectedChatMode,
+  initialKnowledgeBase,
+  initialLanguageModel,
   isReadonly,
 }: {
-  selectedModeId: ChatModeKeyOptions;
+  selectedChatMode: ChatModeKeyOptions;
+  initialKnowledgeBase?: KnowledgeBaseKeyOptions;
+  initialLanguageModel?: LanguageModelKeyOptions;
   isReadonly: boolean;
 }) {
   const router = useRouter();
   const { open } = useSidebar();
   const { t } = useTranslation();
-
+  const pathname = usePathname();
   const { width: windowWidth } = useWindowSize();
-
   const {
     chatModes,
     currentKnowledgeBase,
@@ -40,7 +47,6 @@ function PureChatHeader({
     touValid,
     user,
     userSettings,
-
     setCurrentKnowledgeBase,
     setCurrentLanguageModel,
     setCurrentLanguageType,
@@ -51,10 +57,11 @@ function PureChatHeader({
     setUserSettings,
   } = useCoreContext();
 
-  const [chatMode, setChatMode] = useState(ChatModeKeyOptions.Generic);
+  const [chatModeKey, setChatModeKey] = useState(selectedChatMode);
 
-  const handleChange = (event: string) => {
-    setChatMode(event as ChatModeKeyOptions);
+  const handleChatModeChange = (event: string) => {
+    setChatModeKey(event as ChatModeKeyOptions);
+    router.push(`/${event}`);
   };
 
   const handleKnowledgeBaseChange = (event: string) => {
@@ -67,8 +74,10 @@ function PureChatHeader({
     );
     if (selectedKnowledgeBase) {
       setCurrentKnowledgeBase(selectedKnowledgeBase);
-      // if (!location.pathname.includes(selectedKnowledgeBase.key))
-      // navigateTo(`/${currentChatMode.key}/${selectedKnowledgeBase?.key}`);
+
+      if (!pathname.includes(selectedKnowledgeBase.key))
+        router.push(`/${chatModeKey}/${selectedKnowledgeBase?.key}`);
+      // navigateTo(`/${chatModeKey}/${selectedKnowledgeBase?.key}`);
     }
   };
 
@@ -82,7 +91,9 @@ function PureChatHeader({
     );
     if (selectedLanguageModel) {
       setCurrentLanguageModel(selectedLanguageModel);
-      // if (!location.pathname.includes(selectedLanguageModel.key))
+
+      if (!pathname.includes(selectedLanguageModel.key))
+        router.push(`/${chatModeKey}/${selectedLanguageModel?.key}`);
       //   navigateTo(`/${currentChatMode.key}/${selectedLanguageModel?.key}`);
     }
   };
@@ -135,15 +146,19 @@ function PureChatHeader({
       )}
       <Dropdown
         id="chat-mode-dropdown"
-        value={chatMode}
-        onChange={handleChange}
+        value={chatModeKey}
+        onChange={handleChatModeChange}
         options={chatModes}
         startIcon={
-          chatMode === ChatModeKeyOptions.Generic ? <BotIcon /> : <FileIcon />
+          chatModeKey === ChatModeKeyOptions.Generic ? (
+            <BotIcon />
+          ) : (
+            <FileIcon />
+          )
         }
       />
 
-      {chatMode === ChatModeKeyOptions.Generic && (
+      {chatModeKey === ChatModeKeyOptions.Generic && (
         <Dropdown
           id="language-model-dropdown"
           value={currentLanguageModel?.key || languageModels?.[0].key || ""}
@@ -153,7 +168,7 @@ function PureChatHeader({
         />
       )}
 
-      {chatMode === ChatModeKeyOptions.Documents && (
+      {chatModeKey === ChatModeKeyOptions.Documents && (
         <Dropdown
           id="knowledge-base-dropdown"
           value={currentKnowledgeBase?.key || knowledgeBases?.[0].key || ""}
@@ -167,5 +182,5 @@ function PureChatHeader({
 }
 
 export const ChatHeader = memo(PureChatHeader, (prevProps, nextProps) => {
-  return prevProps.selectedModeId === nextProps.selectedModeId;
+  return prevProps.selectedChatMode === nextProps.selectedChatMode;
 });

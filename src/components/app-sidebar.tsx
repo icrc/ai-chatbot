@@ -47,9 +47,9 @@ export function AppSidebar() {
                   type="button"
                   className="p-2 h-fit"
                   onClick={() => {
-                    // setOpenMobile(false);
-                    // router.push("/");
-                    // router.refresh();
+                    setOpenMobile(false);
+                    router.push("/");
+                    router.refresh();
                   }}
                 >
                   <PlusIcon />

@@ -22,7 +22,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
           key={id}
           id={id}
           initialMessages={[]}
-          initialChatModel={DEFAULT_CHAT_MODEL}
+          initialChatMode={DEFAULT_CHAT_MODEL}
           isReadonly={false}
           autoResume={true}
         />
@@ -37,7 +37,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
         key={id}
         id={id}
         initialMessages={[]}
-        initialChatModel={modelIdFromCookie}
+        initialChatMode={modelIdFromCookie}
         isReadonly={false}
         autoResume={true}
       />

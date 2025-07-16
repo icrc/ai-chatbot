@@ -24,6 +24,7 @@ import { useScrollToBottom } from "@ai-chatbot/hooks/use-scroll-to-bottom";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { ArrowUpIcon, StopIcon } from "./icons";
+import type { ProcessPromptOptions } from "./chat";
 import { SuggestedActions } from "./suggested-actions";
 
 function PureMultimodalInput({
@@ -36,6 +37,7 @@ function PureMultimodalInput({
   attachments: sources,
   setAttachments,
   messages,
+  processPrompt,
   setMessages,
   handleSubmit,
   className,
@@ -49,6 +51,10 @@ function PureMultimodalInput({
   attachments: Array<[string, Source]>;
   setAttachments: Dispatch<SetStateAction<Array<[string, Source]>>>;
   messages: Array<Message> | undefined;
+  processPrompt: (
+    inputValue: string,
+    options?: ProcessPromptOptions
+  ) => Promise<void>;
   setMessages: (messages: Message[]) => void;
   handleSubmit: () => Promise<void>;
   className?: string;
@@ -108,15 +114,14 @@ function PureMultimodalInput({
 
   // TODO: future implementation
   // const fileInputRef = useRef<HTMLInputElement>(null);
-  const [uploadQueue, setUploadQueue] = useState<Array<string>>([]);
+  // const [uploadQueue, setUploadQueue] = useState<Array<string>>([]);
   const [shouldLoadSuggestions, setShouldLoadSuggestions] =
-    useState<boolean>(false);
+    useState<boolean>(true);
 
   useEffect(() => {
-    setShouldLoadSuggestions(
-      !chatId && !messages?.length && !sources.length && !uploadQueue.length
-    );
-  }, [messages, sources, uploadQueue]);
+    // !chatId && !messages?.length && !sources.length && !uploadQueue.length;
+    setShouldLoadSuggestions(!chatId && !messages?.length && !sources.length);
+  }, [messages, sources]);
 
   const submitForm = useCallback(async () => {
     // await processPrompt(input);
@@ -225,7 +230,7 @@ function PureMultimodalInput({
           >
             <Button
               data-testid="scroll-to-bottom-button"
-              className="rounded-full"
+              className="rounded-full cursor-pointer"
               size="icon"
               variant="outline"
               onClick={(event) => {
@@ -238,9 +243,11 @@ function PureMultimodalInput({
           </motion.div>
         )}
       </AnimatePresence>
+
       {shouldLoadSuggestions && (
-        <SuggestedActions chatId={"0196c471-1c34-7271-95ec-ddcbbb6d5bfa"} />
+        <SuggestedActions processPrompt={processPrompt} />
       )}
+
       {/* // TODO: future implementation
    <input
         type="file"
@@ -283,6 +290,7 @@ function PureMultimodalInput({
           ))}
         </div>
       )} */}
+
       <Textarea
         data-testid="multimodal-input"
         ref={textareaRef}
@@ -330,7 +338,7 @@ function PureMultimodalInput({
           <SendButton
             input={input}
             submitForm={submitForm}
-            uploadQueue={uploadQueue}
+            uploadQueue={undefined}
           />
         )}
       </div>
@@ -408,7 +416,8 @@ function PureSendButton({
 }: {
   submitForm: () => void;
   input: string;
-  uploadQueue: Array<string>;
+  // FIXME
+  uploadQueue: Array<string> | undefined;
 }) {
   return (
     <Button
@@ -418,7 +427,9 @@ function PureSendButton({
         event.preventDefault();
         submitForm();
       }}
-      disabled={input.length === 0 || uploadQueue.length > 0}
+      disabled={
+        uploadQueue?.length ? uploadQueue.length > 0 : input.length === 0
+      }
     >
       <ArrowUpIcon size={14} />
     </Button>
@@ -426,7 +437,7 @@ function PureSendButton({
 }
 
 const SendButton = memo(PureSendButton, (prevProps, nextProps) => {
-  if (prevProps.uploadQueue.length !== nextProps.uploadQueue.length)
+  if (prevProps.uploadQueue?.length !== nextProps.uploadQueue?.length)
     return false;
   if (prevProps.input !== nextProps.input) return false;
   return true;
