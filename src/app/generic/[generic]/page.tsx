@@ -1,12 +1,21 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import {
   ChatModeKeyOptions,
-  LanguageModelKeyOptions,
+  type LanguageModelKeyOptions,
 } from "@ai-chatbot/app/api/models";
 import { Chat } from "@ai-chatbot/components/chat";
 import { DataStreamHandler } from "@ai-chatbot/components/data-stream-handler";
 
-export default async function Llama4() {
+export default function GenericDynamicPage() {
+  const pathname = usePathname();
   const id = "";
+
+  const initialLanguageModel = pathname.split(
+    `/${ChatModeKeyOptions.Generic}/`
+  )[1] as LanguageModelKeyOptions;
+
   return (
     <>
       <Chat
@@ -14,7 +23,7 @@ export default async function Llama4() {
         id={id}
         initialMessages={[]}
         initialChatMode={ChatModeKeyOptions.Generic}
-        initialLanguageModel={LanguageModelKeyOptions.Llama_4}
+        initialLanguageModel={initialLanguageModel}
         isReadonly={false}
         autoResume={false}
       />

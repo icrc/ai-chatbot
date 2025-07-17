@@ -96,8 +96,6 @@ export function SidebarUserNav({ user }: { user: any }) {
   const { setTheme, resolvedTheme } = useTheme();
   const { t } = useTranslation();
 
-  console.info({ userSettings });
-
   /*
    * when this settings menu mounts, capture the current settings into two states:
    * initialSettings to compare later, tempSettings is used

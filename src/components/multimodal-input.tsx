@@ -140,7 +140,6 @@ function PureMultimodalInput({
     resetHeight();
     // setStatus(ChatStatus.Submitted);
     setInput("");
-    console.info("GOTTEM", status);
     if (width && width > 768) {
       textareaRef.current?.focus();
     }
