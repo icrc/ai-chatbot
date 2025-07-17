@@ -12,6 +12,8 @@ import {
   type Message,
   type ChatMode,
   type Chat as ChatModel,
+  type KnowledgeBaseKeyOptions,
+  type LanguageModelKeyOptions,
 } from "@ai-chatbot/app/api/models";
 import {
   getChatMetadataAndMessages,
@@ -39,28 +41,37 @@ const initialChatSessionState: Omit<ChatSession, "localSessionId"> = {
   hasSubmittedStopStream: false,
 };
 
-interface ProcessPromptOptions {
+// FIXME
+export interface ProcessPromptOptions {
   isRetry?: boolean;
 }
 
 export function Chat({
   id: chatId,
   initialMessages,
-  initialChatModel,
+  initialChatMode,
+  initialKnowledgeBase,
+  initialLanguageModel,
   isReadonly,
   autoResume,
 }: {
   id: string;
   initialMessages: Array<Message>;
-  initialChatModel: ChatModeKeyOptions;
+  initialChatMode: ChatModeKeyOptions;
+  initialKnowledgeBase?: KnowledgeBaseKeyOptions;
+  initialLanguageModel?: LanguageModelKeyOptions;
   isReadonly: boolean;
   autoResume: boolean;
 }) {
   const {
     chatModes,
+    knowledgeBases,
+    languageModels,
     currentKnowledgeBase,
     currentLanguageModel,
     setUserSuggestions,
+    setCurrentKnowledgeBase,
+    setCurrentLanguageModel,
   } = useCoreContext();
 
   const [status, setStatus] = useState<ChatStatus>(ChatStatus.Ready);
@@ -71,13 +82,25 @@ export function Chat({
   });
   const [previousChats, setPreviousChats] = useState<ChatModel[]>([]);
   const [currentChatMode, setCurrentChatMode] = useState<ChatMode>(
-    chatModes[0]
+    chatModes.find((cm) => cm.key === initialChatMode) ?? chatModes[0]
   );
 
   // to check if request responses should be ignored
   const currentLocalSessionIdRef = useRef<number>(
     currentChatSession.localSessionId
   );
+
+  useEffect(() => {
+    if (initialKnowledgeBase && knowledgeBases)
+      setCurrentKnowledgeBase(
+        knowledgeBases.find((kb) => kb.key === initialKnowledgeBase)
+      );
+
+    if (initialLanguageModel && languageModels)
+      setCurrentLanguageModel(
+        languageModels.find((lm) => lm.key === initialLanguageModel)
+      );
+  }, []);
 
   const processPrompt = async (
     inputValue: string,
@@ -168,8 +191,6 @@ export function Chat({
               prevChats?.filter?.((chat) => chat.id !== res.id) || [];
             return [res, ...filteredChats];
           });
-
-          setUserSuggestions(res.knowledge_base?.examples ?? []);
 
           navigateTo(`/chat/${chatIdFromStreamedAnswer}`);
         }
@@ -294,7 +315,10 @@ export function Chat({
   return (
     <>
       <div className="flex flex-col min-w-0 h-dvh bg-background">
-        <ChatHeader selectedModeId={initialChatModel} isReadonly={isReadonly} />
+        <ChatHeader
+          selectedChatMode={initialChatMode}
+          isReadonly={isReadonly}
+        />
 
         <Messages
           chatId={chatId}
@@ -322,6 +346,7 @@ export function Chat({
               attachments={attachments}
               setAttachments={setAttachments}
               messages={currentChatSession?.messages as Message[]}
+              processPrompt={processPrompt}
               setMessages={setMessages}
             />
           )}

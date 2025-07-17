@@ -17,7 +17,7 @@ export default async function Home() {
           key={id}
           id={id}
           initialMessages={[]}
-          initialChatModel={DEFAULT_CHAT_MODEL}
+          initialChatMode={DEFAULT_CHAT_MODEL}
           isReadonly={false}
           autoResume={false}
         />
@@ -32,7 +32,7 @@ export default async function Home() {
         key={id}
         id={id}
         initialMessages={[]}
-        initialChatModel={modelIdFromCookie}
+        initialChatMode={modelIdFromCookie}
         isReadonly={false}
         autoResume={false}
       />

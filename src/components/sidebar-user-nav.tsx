@@ -12,9 +12,15 @@ import {
   useCoreContext,
 } from "@ai-chatbot/app/contexts/core-context";
 import {
+  type ApiUserSettings,
+  type ChatMode,
   type ChatModeKeyOptions,
+  type KnowledgeBase,
+  KnowledgeBaseKeyOptions,
   LanguageKeyOptions,
+  type LanguageModel,
   type LanguageOption,
+  type UserLanguageOption,
 } from "@ai-chatbot/app/api/models";
 import { toast } from "./toast";
 import {
@@ -45,6 +51,7 @@ import {
 } from "./ui/generic-dialog";
 import { Button } from "./ui/button";
 import { Dropdown } from "./ui/dropdown";
+import { postUserSettings } from "@ai-chatbot/app/api/route";
 
 export const languageTypes: LanguageOption[] = [
   {
@@ -62,21 +69,47 @@ export const languageTypes: LanguageOption[] = [
 ];
 
 export function SidebarUserNav({ user }: { user: any }) {
+  const {
+    chatModes,
+    currentKnowledgeBase,
+    currentLanguageModel,
+    currentLanguageType,
+    currentTheme,
+    isOpenUserSettings,
+    knowledgeBases,
+    languageModels,
+    selectedLanguage,
+    setCurrentKnowledgeBase,
+    setCurrentLanguageModel,
+    setCurrentLanguageType,
+    setCurrentTheme,
+    setIsOpenUserSettings,
+    setSelectedLanguage,
+    setTouValid,
+    setUserSettings,
+    setUserSuggestions,
+    touValid,
+    // user,
+    userSettings,
+    userSuggestions,
+  } = useCoreContext();
   const { setTheme, resolvedTheme } = useTheme();
   const { t } = useTranslation();
-  const { chatModes, knowledgeBases, languageModels } = useCoreContext();
 
-  /* when this settings menu mounts, capture the current settings into two states:
+  /*
+   * when this settings menu mounts, capture the current settings into two states:
    * initialSettings to compare later, tempSettings is used
    * to store temporary preference changes to save to the backend.
    */
   const [initialSettings, setInitialSettings] = useState({
-    languageType: languageTypes[0],
-    theme: themeTypes[0],
-    chatMode: chatModes[0],
-    knowledgeBase: knowledgeBases?.[0],
-    languageModel: languageModels?.[0],
+    languageType: userSettings?.defaultLanguage || currentLanguageType,
+    theme: userSettings?.defaultTheme || currentTheme,
+    // FIXME: remove last cases after current props are working properly
+    chatMode: userSettings?.defaultChatMode || chatModes[0],
+    knowledgeBase: userSettings?.defaultKnowledgeBase || currentKnowledgeBase,
+    languageModel: userSettings?.defaultLanguageModel || currentLanguageModel,
   });
+
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSettingsModalOpen, setIsSettingsModalOpen] =
     useState<boolean>(false);
@@ -93,14 +126,117 @@ export function SidebarUserNav({ user }: { user: any }) {
 
   useEffect(() => {
     if (userName) setIsLoading(false);
-  }, [userName]);
+    if (userSettings) {
+      const settings = {
+        chatMode: userSettings.defaultChatMode,
+        knowledgeBase: userSettings.defaultKnowledgeBase,
+        languageModel: userSettings.defaultLanguageModel,
+        languageType: userSettings.defaultLanguage,
+        theme: userSettings.defaultTheme,
+      };
+      setInitialSettings(settings);
+      setTempSettings(settings);
+    }
+  }, [userName, userSettings]);
 
   const closeModal = () => {
     setSaveError(false);
     setSaveSuccess(false);
     setIsSaving(false);
-    // setTempSettings(initialSettings);
+    setTempSettings(initialSettings);
     setIsSettingsModalOpen(false);
+  };
+
+  const handleSaveChanges = async () => {
+    setIsSaving(true);
+    setSaveError(false);
+    setSaveSuccess(false);
+
+    const userSettingsData: ApiUserSettings = {
+      default_chat_mode: tempSettings?.chatMode?.key,
+      default_knowledge_base: tempSettings?.knowledgeBase?.key as string,
+      default_model: tempSettings?.languageModel?.key as string,
+      language: tempSettings?.languageType?.key as string,
+      theme: tempSettings?.theme?.key as string,
+    };
+
+    try {
+      await postUserSettings(userSettingsData).then((settingsData) => {
+        const defaultChatMode = chatModes.find(
+          (cm) => cm.key === settingsData.default_chat_mode
+        ) as ChatMode;
+        const defaultKnowledgeBase = knowledgeBases?.find(
+          (kb) => kb.key === settingsData.default_knowledge_base
+        ) as KnowledgeBase;
+        const defaultLanguage = languageTypes.find(
+          (lt) => lt.key === settingsData.language
+        ) as UserLanguageOption;
+        const defaultLanguageModel = languageModels?.find(
+          (lm) => lm.key === settingsData.default_model
+        ) as LanguageModel;
+        const defaultTheme = themeTypes.find(
+          (tt) => tt.key === settingsData.theme
+        ) as ThemeTypeOptions;
+
+        setUserSettings({
+          defaultChatMode,
+          defaultKnowledgeBase,
+          defaultLanguage,
+          defaultLanguageModel,
+          defaultTheme,
+        });
+
+        if (
+          defaultLanguage &&
+          defaultLanguage.key !== initialSettings.languageType?.key
+        ) {
+          setCurrentLanguageType(defaultLanguage);
+          i18next.changeLanguage(defaultLanguage.key);
+          setSelectedLanguage(defaultLanguage.key);
+        }
+
+        if (defaultTheme && defaultTheme.key !== initialSettings.theme?.key) {
+          setCurrentTheme(defaultTheme);
+          // toggleTheme(settingsData.defaultTheme.key);
+          setTheme(defaultTheme.key);
+        }
+
+        if (
+          defaultChatMode &&
+          defaultChatMode.key !== initialSettings.chatMode?.key
+        ) {
+          // handleSelectedChatMode(defaultChatMode);
+        }
+
+        if (
+          defaultKnowledgeBase &&
+          defaultKnowledgeBase.key !== initialSettings.knowledgeBase?.key
+        ) {
+          setCurrentKnowledgeBase(defaultKnowledgeBase);
+        }
+
+        if (
+          defaultLanguageModel &&
+          defaultLanguageModel.key !== initialSettings.languageModel?.key
+        ) {
+          setCurrentLanguageModel(defaultLanguageModel);
+        }
+
+        // after a successful save, update the initial settings to disable the save changes button
+        setInitialSettings({
+          chatMode: defaultChatMode,
+          knowledgeBase: defaultKnowledgeBase,
+          languageModel: defaultLanguageModel,
+          languageType: defaultLanguage,
+          theme: defaultTheme,
+        });
+      });
+      setSaveSuccess(true);
+    } catch (error) {
+      setSaveError(true);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleLanguageTypeChange = (event: string) => {
@@ -110,7 +246,6 @@ export function SidebarUserNav({ user }: { user: any }) {
     );
     if (selectedLanguage) {
       setTempSettings((prev) => ({ ...prev, languageType: selectedLanguage }));
-      i18next.changeLanguage(selectedKey);
     }
   };
 
@@ -121,7 +256,6 @@ export function SidebarUserNav({ user }: { user: any }) {
     );
     if (selectedTheme) {
       setTempSettings((prev) => ({ ...prev, theme: selectedTheme }));
-      setTheme(selectedKey);
     }
   };
 
@@ -281,18 +415,9 @@ export function SidebarUserNav({ user }: { user: any }) {
             </div>
 
             <GenericDialogAction
-              className="flex items-center text-sm gap-1"
+              className="flex items-center text-sm gap-1 cursor-pointer"
               disabled={!settingsChanged || isSaving}
-              onClick={() => {
-                // FIXME: implement actual BE behaviour
-                console.info("onClick");
-                setIsSaving(true);
-                setTimeout(() => {
-                  setIsSaving(false);
-                  setSaveSuccess(false);
-                  setSaveError(true);
-                }, 1500);
-              }}
+              onClick={handleSaveChanges}
             >
               {isSaving
                 ? t("userSettingsDialog.savingChanges")
@@ -320,7 +445,7 @@ export function SidebarUserNav({ user }: { user: any }) {
             ) : (
               <SidebarMenuButton
                 data-testid="user-nav-button"
-                className="data-[state=open]:bg-sidebar-accent bg-background data-[state=open]:text-sidebar-accent-foreground h-10"
+                className="data-[state=open]:bg-sidebar-accent bg-background data-[state=open]:text-sidebar-accent-foreground h-10 cursor-pointer"
               >
                 <Avatar />
                 <span data-testid="user-email" className="truncate">

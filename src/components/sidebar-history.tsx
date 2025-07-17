@@ -37,7 +37,8 @@ type GroupedChats = {
 
 export function SidebarHistory({ user }: { user: string | undefined }) {
   const { setOpenMobile } = useSidebar();
-  const { userSuggestions, setUserSuggestions } = useCoreContext();
+  const { setUserSuggestions, currentLanguageModel, currentKnowledgeBase } =
+    useCoreContext();
   const { t } = useTranslation();
   const { id } = useParams();
   const router = useRouter();
@@ -51,11 +52,15 @@ export function SidebarHistory({ user }: { user: string | undefined }) {
 
   useEffect(() => {
     // FIXME
-    getChats(ChatModeKeyOptions.Generic).then((data) => {
+    const currentChatMode = currentLanguageModel
+      ? ChatModeKeyOptions.Generic
+      : ChatModeKeyOptions.Documents;
+    getChats(currentChatMode).then((data) => {
       setChatHistory([...data]);
-      setUserSuggestions(data[0].knowledge_base?.examples);
+      if (data[0].knowledge_base?.examples)
+        setUserSuggestions(data[0].knowledge_base.examples);
     });
-  }, [userSuggestions]);
+  }, [currentLanguageModel, currentKnowledgeBase]);
 
   const groupChatsByDate = (chats: Chat[]): GroupedChats => {
     const now = new Date();

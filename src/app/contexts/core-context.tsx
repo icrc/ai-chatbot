@@ -112,8 +112,10 @@ const defaultCoreContext = {
   setUserSettings: (() => {}) as React.Dispatch<
     React.SetStateAction<ContextUserSettings | undefined>
   >,
-  userSuggestions: undefined as any,
-  setUserSuggestions: (() => {}) as React.Dispatch<React.SetStateAction<any>>,
+  userSuggestions: [] as string[],
+  setUserSuggestions: (() => {}) as React.Dispatch<
+    React.SetStateAction<string[]>
+  >,
 };
 
 type CoreContextProps = typeof defaultCoreContext;
@@ -156,7 +158,7 @@ const CoreProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [userSettings, setUserSettings] = useState<
     ContextUserSettings | undefined
   >();
-  const [userSuggestions, setUserSuggestions] = useState<any>();
+  const [userSuggestions, setUserSuggestions] = useState<string[]>([]);
 
   const [alertOpen, setAlertOpen] = useState<boolean>(false);
 
